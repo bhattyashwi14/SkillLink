@@ -1,0 +1,6 @@
+asgiref==3.8.1
+Django==5.0.1
+matplotlib==3.8.2
+numpy==1.26.3
+pillow==10.2.0
+sqlparse==0.4.4
