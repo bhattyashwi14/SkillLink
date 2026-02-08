@@ -1,0 +1,209 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Portal | SkillLink</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at top right, #1a1a3a, #0b0b1a);
+        }
+        .auth-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 450px;
+            padding: 3rem;
+        }
+        .nav-pills .nav-link {
+            color: #aaa;
+            border-radius: 50px;
+            padding: 10px 25px;
+        }
+        .nav-pills .nav-link.active {
+            background: linear-gradient(45deg, var(--purple), var(--accent));
+            color: white;
+        }
+        .form-control {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 12px;
+            padding: 12px;
+        }
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent);
+            color: white;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+        }
+        .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    opacity: 1;
+}
+
+.form-label {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+.auth-card a {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.auth-card a:hover {
+    color: white !important;
+}
+
+    </style>
+</head>
+<body class="bg-dark">
+
+<div class="auth-container">
+    <div class="auth-card shadow-lg">
+        <div class="text-center mb-4">
+            <h2 class="text-gradient fw-bold">Tutor Command Center</h2>
+            <p class="text-muted small">Join the elite circle of educators</p>
+        </div>
+
+        <ul class="nav nav-pills mb-4 justify-content-center" id="pills-tab" role="tablist">
+            
+            <li class="nav-item">
+                <button class="nav-link" id="pills-register-tab" data-bs-toggle="pill" data-bs-target="#pills-register">Register</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link active" id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login">Login</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-login">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Email Address</label>
+                        <input type="email" class="form-control" placeholder="name@email.com">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small text-muted">Password</label>
+                        <input type="password" class="form-control" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom w-100 py-3">Enter Dashboard</button>
+                </form>
+            </div>
+
+            <div class="tab-pane fade" id="pills-register">
+                {% if messages %}
+                    <div class="mb-3">
+                        {% for message in messages %}
+                            <div class="alert alert-danger border-0 bg-danger bg-opacity-10 text-danger small">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <form method="POST" action="{% url 'tutor_register' %}" novalidate>
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label small text-muted ">Full Name</label>
+                        <input type="text" class="form-control" placeholder="John Doe" name="username" value="{{ typed_name|default:'' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Email</label>
+                        <input type="email" class="form-control" placeholder="name@email.com" name="email" value="{{ typed_email|default:'' }}">
+                        {% if email_error %}
+                            <div class="text-danger small mt-1" style="font-size: 0.8rem;">{{ email_error }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label small text-muted">Create Password</label>
+                        <input type="password" class="form-control" placeholder="••••••••" name="password">
+                        {% if password_error %}
+                            <div class="text-danger small mt-1">{{ password_error }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small text-muted">Confirm Password</label>
+                        <input type="password" name="confirm_password" class="form-control" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom w-100 py-3">Start Onboarding</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="/" class="text-muted small text-decoration-none">← Back to Home</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // If there are error messages, automatically switch to the Register tab
+    document.addEventListener("DOMContentLoaded", function() {
+        {% if messages %}
+            var registerTab = new bootstrap.Tab(document.querySelector('#pills-register-tab'));
+            registerTab.show();
+        {% endif %}
+        {% if register_error %}
+            var registerTab = new bootstrap.Tab(document.querySelector('#pills-register-tab'));
+            registerTab.show();
+        {% endif %}
+    });
+    
+
+</script>
+</body>
+</html> {% endcomment %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillLink | Tutor Access</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+</head>
+
+<body class="bg-dark text-white d-flex align-items-center justify-content-center min-vh-100">
+
+<div class="container text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+
+            <div class="card bg-dark border border-secondary rounded-5 shadow-lg p-5">
+
+                <h2 class="text-gradient fw-bold mb-3">Welcome, Tutor!</h2>
+                <p class="text-muted mb-4">Choose how you want to continue</p>
+
+                <div class="d-grid gap-3">
+                    <button class="btn btn-primary-custom rounded-pill shadow-lg"
+                            onclick="window.location.href='{% url 'tutor_login' %}'">
+                        Login
+                    </button>
+
+                    <button class="btn btn-outline-info rounded-pill shadow-lg"
+                            onclick="window.location.href='{% url 'tutor_register' %}'">
+                        Signup
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

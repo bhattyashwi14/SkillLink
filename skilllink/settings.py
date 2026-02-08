@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'tutor.apps.TutorConfig',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,7 @@ ROOT_URLCONF = 'skilllink.urls'
 
 TEMPLATES = [
     {
+        'DIRS': [BASE_DIR / 'core' / 'templates'],
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
         'APP_DIRS': True,
@@ -117,3 +119,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'core/static')]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'skill.link.connects@gmail.com'
+EMAIL_HOST_PASSWORD = 'csourmehezdxptlk'
+

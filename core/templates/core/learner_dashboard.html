@@ -1,0 +1,1118 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkillLink | Dashboard</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+
+<style>
+
+body{
+    background:#0f172a;
+    color:white;
+}
+
+/* NAVBAR */
+.navbar-custom{
+    background: rgba(15,23,42,0.7);
+    backdrop-filter: blur(14px);
+    border-bottom:1px solid rgba(125,211,252,0.15);
+}
+
+/* SEARCH */
+.search-box{
+    background:#020617;
+    border:1px solid rgba(125,211,252,0.25);
+    color:white;
+}
+.search-box::placeholder{
+    color:#94a3b8;
+}
+
+/* PROFILE */
+.profile-thumb{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background: linear-gradient(135deg,#38bdf8,#6366f1);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:600;
+    cursor:pointer;
+}
+
+/* HERO BANNER */
+.hero-box{
+    background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(99,102,241,0.15));
+    border:1px solid rgba(125,211,252,0.2);
+    border-radius:22px;
+}
+
+/* HEADING */
+.section-title{
+    font-weight:700;
+    font-size:28px;
+    background: linear-gradient(90deg,#7dd3fc,#6366f1);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+/* SKILL CARD */
+.skill-card{
+    background: rgba(30,41,59,0.6);
+    border:1px solid rgba(125,211,252,0.2);
+    border-radius:22px;
+    overflow:hidden;
+    transition:.35s;
+    cursor:pointer;
+}
+
+.skill-card:hover{
+    transform:translateY(-8px);
+    border-color:#7dd3fc;
+    box-shadow:0 20px 40px rgba(56,189,248,0.15);
+}
+
+.skill-img{
+    height:140px;
+    background-size:cover;
+    background-position:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark navbar-custom px-4 py-3">
+
+<span class="navbar-brand fw-bold text-info fs-4">
+    SkillLink
+</span>
+
+<div class="ms-auto d-flex align-items-center gap-3">
+
+<input type="text"
+class="form-control search-box rounded-pill px-4"
+placeholder="Search skills, tutors, technologies..."
+style="width:280px">
+
+<div class="dropdown">
+<div class="profile-thumb" data-bs-toggle="dropdown">
+    Y
+</div>
+
+<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+<li><a class="dropdown-item" href="#">My Profile</a></li>
+<li><a class="dropdown-item" href="#">Settings</a></li>
+<li><a class="dropdown-item text-danger" href="#">Logout</a></li>
+</ul>
+</div>
+
+</div>
+
+</nav>
+
+
+<!-- HERO -->
+<div class="container mt-4">
+<div class="hero-box p-4 p-md-5 d-flex justify-content-between align-items-center flex-wrap">
+
+<div>
+<h3 class="fw-bold text-info">Welcome to SkillLink ⚡</h3>
+<p class="text-secondary mb-0">
+Complete your profile to unlock better tutor matches and skill suggestions
+</p>
+</div>
+
+<button class="btn btn-info rounded-pill px-4">
+Complete Profile
+</button>
+
+</div>
+</div>
+
+
+<!-- HEADING -->
+<div class="container mt-5 text-center">
+<h2 class="section-title">Explore Skills</h2>
+<p class="text-secondary">Choose a skill and find top rated tutors</p>
+</div>
+
+
+<!-- SKILLS -->
+<div class="container mt-4">
+<div class="row g-4">
+
+<!-- PYTHON -->
+<div class="col-md-3">
+<div class="skill-card">
+
+<div class="skill-img"
+style="background-image:url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4');">
+</div>
+
+<div class="p-4">
+<h5 class="fw-semibold">Python</h5>
+<small class="text-secondary">12 Tutors Available</small>
+</div>
+
+</div>
+</div>
+
+<!-- DS -->
+<div class="col-md-3">
+<div class="skill-card">
+
+<div class="skill-img"
+style="background-image:url('https://images.unsplash.com/photo-1555949963-aa79dcee981c');">
+</div>
+
+<div class="p-4">
+<h5 class="fw-semibold">Data Structures</h5>
+<small class="text-secondary">8 Tutors Available</small>
+</div>
+
+</div>
+</div>
+
+<!-- WEB -->
+<div class="col-md-3">
+<div class="skill-card">
+
+<div class="skill-img"
+style="background-image:url('https://images.unsplash.com/photo-1498050108023-c5249f4df085');">
+</div>
+
+<div class="p-4">
+<h5 class="fw-semibold">Web Development</h5>
+<small class="text-secondary">15 Tutors Available</small>
+</div>
+
+</div>
+</div>
+
+<!-- JAVA -->
+<div class="col-md-3">
+<div class="skill-card">
+
+<div class="skill-img"
+style="background-image:url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97');">
+</div>
+
+<div class="p-4">
+<h5 class="fw-semibold">Java</h5>
+<small class="text-secondary">10 Tutors Available</small>
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html> {% endcomment %}
+
+
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SkillLink Dashboard</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+
+<style>
+
+/* ===== GLOBAL ===== */
+body{
+background:#0f172a;
+color:white;
+font-family:Poppins;
+}
+
+/* ===== NAVBAR GLASS ===== */
+.navbar-glass{
+background:rgba(30,41,59,0.6);
+backdrop-filter:blur(14px);
+border-bottom:1px solid rgba(125,211,252,0.15);
+}
+
+/* ===== LOGO ===== */
+.logo-circle{
+width:44px;
+height:44px;
+border-radius:50%;
+background:rgba(255,255,255,0.04);
+border:1px solid rgba(125,211,252,0.25);
+display:flex;
+align-items:center;
+justify-content:center;
+backdrop-filter:blur(10px);
+}
+
+.logo-circle img{
+width:26px;
+height:26px;
+object-fit:contain;
+}
+
+.brand-text{
+font-weight:700;
+font-size:1.4rem;
+letter-spacing:0.5px;
+}
+
+.brand-accent{
+height:3px;
+width:60%;
+margin-top:3px;
+border-radius:20px;
+background:linear-gradient(90deg,#38bdf8,#6366f1);
+}
+
+/* ===== SEARCH ===== */
+.search-box{
+background:#020617;
+border:1px solid rgba(125,211,252,0.25);
+color:white;
+}
+
+.search-box::placeholder{
+color:#94a3b8;
+}
+
+/* ===== AVATAR ===== */
+.avatar{
+width:42px;
+height:42px;
+border-radius:50%;
+background:linear-gradient(135deg,#38bdf8,#6366f1);
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:700;
+cursor:pointer;
+}
+
+/* ===== HERO ===== */
+.hero-box{
+background:linear-gradient(135deg,#0ea5e9,#6366f1);
+border-radius:22px;
+}
+
+/* ===== HEADING ===== */
+.skills-heading{
+font-weight:700;
+font-size:2.1rem;
+letter-spacing:0.5px;
+background:linear-gradient(120deg,#e2e8f0,#7dd3fc);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+/* ===== SKILL CARD ===== */
+.skill-card{
+background:rgba(30,41,59,0.75);
+border:1px solid rgba(125,211,252,0.2);
+border-radius:22px;
+transition:0.35s;
+cursor:pointer;
+overflow:hidden;
+}
+
+.skill-card:hover{
+transform:translateY(-8px) scale(1.02);
+border-color:#38bdf8;
+box-shadow:0 0 25px rgba(56,189,248,0.25);
+}
+
+.skill-img{
+height:140px;
+object-fit:cover;
+width:100%;
+}
+
+.skill-title{
+font-weight:600;
+font-size:1.1rem;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-glass px-4 py-3">
+
+<div class="d-flex align-items-center gap-3">
+
+<div class="logo-circle">
+<img src="{% static 'core/logo.png' %}">
+</div>
+
+<div>
+<div class="brand-text">SkillLink</div>
+<div class="brand-accent"></div>
+</div>
+
+</div>
+
+<div class="ms-auto d-flex align-items-center gap-3">
+
+<input type="text"
+class="form-control search-box rounded-pill px-4"
+placeholder="Search skills, tutors, domains..."
+style="width:280px">
+
+<div class="dropdown">
+<div class="avatar" data-bs-toggle="dropdown">
+{{ request.session.email|first|upper }}
+</div>
+
+<ul class="dropdown-menu dropdown-menu-end">
+<li><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></li>
+<li><a class="dropdown-item text-danger" href="{% url 'learn_login' %}?mode=login">Logout</a></li>
+</ul>
+
+</div>
+
+</div>
+</nav>
+
+<!-- ===== COMPLETE PROFILE HERO ===== -->
+{% if not profile_completed %}
+<div class="container mt-4">
+<div class="hero-box p-4 p-md-5 d-flex justify-content-between align-items-center flex-wrap">
+
+<div>
+<h3 class="fw-bold">Complete Your Profile ⚡</h3>
+<p class="mb-0">Unlock tutor recommendations & better skill matching</p>
+</div>
+
+<a href="{% url 'profile' %}" class="btn btn-dark rounded-pill px-4">
+Complete Now
+</a>
+
+</div>
+</div>
+{% endif %}
+
+<!-- ===== SKILLS ===== -->
+<div class="container mt-5">
+
+<h2 class="skills-heading text-center mb-5">
+Explore Skills
+</h2>
+
+<div class="row g-4">
+
+<!-- PYTHON -->
+<div class="col-md-3">
+<a href="#" class="text-decoration-none text-white">
+<div class="skill-card">
+<img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935" class="skill-img">
+<div class="p-3">
+<div class="skill-title">Python</div>
+<small class="text-secondary">12 Tutors Available</small>
+</div>
+</div>
+</a>
+</div>
+
+<!-- DSA -->
+<div class="col-md-3">
+<div class="skill-card">
+<img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4" class="skill-img">
+<div class="p-3">
+<div class="skill-title">Data Structures</div>
+<small class="text-secondary">8 Tutors Available</small>
+</div>
+</div>
+</div>
+
+<!-- WEB -->
+<div class="col-md-3">
+<div class="skill-card">
+<img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" class="skill-img">
+<div class="p-3">
+<div class="skill-title">Web Development</div>
+<small class="text-secondary">15 Tutors Available</small>
+</div>
+</div>
+</div>
+
+<!-- JAVA -->
+<div class="col-md-3">
+<div class="skill-card">
+<img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159" class="skill-img">
+<div class="p-3">
+<div class="skill-title">Java</div>
+<small class="text-secondary">10 Tutors Available</small>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html> {% endcomment %}
+
+
+
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SkillLink Dashboard</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+
+<style>
+
+body{
+background:#0f172a;
+color:white;
+font-family:'Poppins',sans-serif;
+}
+
+/* NAVBAR */
+.navbar-glass{
+background:rgba(15,23,42,0.75);
+backdrop-filter:blur(18px);
+border-bottom:1px solid rgba(125,211,252,0.12);
+}
+
+/* LOGO */
+.logo-circle{
+width:40px;
+height:40px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid rgba(125,211,252,0.5);
+}
+
+/* SEARCH */
+.search-box{
+background:#020617;
+border:1px solid rgba(125,211,252,0.3);
+color:white;
+}
+
+.search-box::placeholder{
+color:#94a3b8;
+}
+
+/* AVATAR */
+.avatar{
+width:42px;
+height:42px;
+border-radius:50%;
+background:linear-gradient(135deg,#0ea5e9,#6366f1);
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:600;
+font-size:18px;
+cursor:pointer;
+}
+
+/* TITLE */
+.section-title{
+font-weight:700;
+letter-spacing:0.6px;
+color:#7dd3fc;
+}
+
+/* SKILL CARD PREMIUM */
+.skill-card{
+position:relative;
+background:linear-gradient(160deg, rgba(30,41,59,0.7), rgba(15,23,42,0.9));
+border:1px solid rgba(125,211,252,0.15);
+border-radius:22px;
+overflow:hidden;
+transition:0.4s;
+cursor:pointer;
+}
+
+.skill-card::before{
+content:"";
+position:absolute;
+top:-100%;
+left:-100%;
+width:200%;
+height:200%;
+background:linear-gradient(120deg, transparent, rgba(125,211,252,0.15), transparent);
+transform:rotate(25deg);
+transition:0.6s;
+}
+
+.skill-card:hover::before{
+top:0;
+left:0;
+}
+
+.skill-card:hover{
+transform:translateY(-10px);
+box-shadow:0 20px 40px rgba(0,0,0,0.5);
+border-color:#38bdf8;
+}
+
+.skill-img{
+height:170px;
+width:100%;
+object-fit:cover;
+}
+
+.skill-content{
+padding:20px;
+}
+
+.skill-title{
+font-weight:600;
+font-size:1.15rem;
+}
+
+.skill-meta{
+font-size:0.9rem;
+color:#94a3b8;
+}
+
+/* BRAND (LIKE YOUR IMAGE) */
+
+.brand-container{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.brand-logo{
+width:46px;
+height:46px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid rgba(56,189,248,0.6);
+box-shadow:0 0 12px rgba(56,189,248,0.35);
+}
+
+.brand-text{
+font-size:28px;
+font-weight:600;
+letter-spacing:0.6px;
+color:#38bdf8;
+font-family:'Poppins',sans-serif;
+text-shadow: 0 0 8px rgba(56,189,248,0.4);
+}
+.tutor-count{
+font-size:13px;
+color:#94a3b8;
+margin-top:4px;
+letter-spacing:0.3px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container mt-4">
+
+<div class="card p-4 bg-dark border border-info rounded-4">
+
+<div class="d-flex justify-content-between">
+<h6 class="text-info">Profile Completion</h6>
+<span>{{ profile_completion }}%</span>
+</div>
+
+<div class="progress mt-2" style="height:8px;">
+<div class="progress-bar bg-info"
+style="width: {{ profile_completion }}%;">
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-glass px-4 py-3">
+
+<div class="brand-container">
+    <img src="{% static 'core/logo.png' %}" class="brand-logo">
+    <span class="brand-text">SkillLink</span>
+</div>
+
+
+<div class="ms-auto d-flex align-items-center gap-3">
+
+<input id="skillSearch"
+type="text"
+class="form-control search-box rounded-pill px-4"
+placeholder="Search skills..."
+style="width:260px">
+
+<div class="dropdown">
+<div class="avatar" data-bs-toggle="dropdown">
+{{ avatar_letter }}
+</div>
+
+<ul class="dropdown-menu dropdown-menu-end">
+<li><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></li>
+<li><a class="dropdown-item text-danger" href="{% url 'learn_login' %}?mode=login">Logout</a></li>
+</ul>
+</div>
+
+</div>
+</nav>
+
+<!-- SKILLS -->
+<div class="container mt-5">
+
+<h2 class="text-center section-title mb-5">
+Explore Skills
+</h2>
+
+<div class="row g-4" id="skillsContainer">
+
+<!-- CARD -->
+<div class="col-md-3 skill-item">
+<div class="skill-card">
+<img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935" class="skill-img">
+<div class="skill-content">
+<div class="skill-title">Python Backend</div>
+<div class="skill-meta">APIs • Production Systems</div>
+<div class="tutor-count">12 Tutors Available</div>
+</div>
+</div>
+</div>
+
+<div class="col-md-3 skill-item">
+<div class="skill-card">
+<img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c" class="skill-img">
+<div class="skill-content">
+<div class="skill-title">System Design</div>
+<div class="skill-meta">Scalable Architecture</div>
+<div class="tutor-count">10 Tutors Available</div>
+</div>
+</div>
+</div>
+
+<div class="col-md-3 skill-item">
+<div class="skill-card">
+<img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa" class="skill-img">
+<div class="skill-content">
+<div class="skill-title">Cloud Engineering</div>
+<div class="skill-meta">AWS • CI/CD • Docker</div>
+<div class="tutor-count">15 Tutors Available</div>
+</div>
+</div>
+</div>
+
+<div class="col-md-3 skill-item">
+<div class="skill-card">
+<img src="https://images.unsplash.com/photo-1509228468518-180dd4864904" class="skill-img">
+<div class="skill-content">
+<div class="skill-title">Data Engineering</div>
+<div class="skill-meta">ETL • Pipelines • Big Data</div>
+<div class="tutor-count">8 Tutors Available</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+const searchInput = document.getElementById("skillSearch");
+const cards = document.querySelectorAll(".skill-item");
+
+searchInput.addEventListener("keyup", function(){
+const value = this.value.toLowerCase();
+
+cards.forEach(card => {
+card.style.display =
+card.innerText.toLowerCase().includes(value)
+? "block"
+: "none";
+});
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html> {% endcomment %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SkillLink Dashboard</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+{% load static %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Inter;
+}
+
+/* NAVBAR */
+.navbar-glass{
+background:rgba(15,23,42,0.7);
+backdrop-filter:blur(14px);
+border-bottom:1px solid rgba(125,211,252,0.15);
+}
+
+/* BRAND */
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.brand img{
+width:42px;
+height:42px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid rgba(56,189,248,0.6);
+
+/* SHINY GLOW */
+box-shadow:
+0 0 8px rgba(56,189,248,0.6),
+0 0 18px rgba(56,189,248,0.35),
+0 0 30px rgba(56,189,248,0.15);
+}
+
+.brand span{
+font-size:24px;
+font-weight:700;
+
+background: linear-gradient(
+90deg,
+#22d3ee 0%,
+#38bdf8 25%,
+#6366f1 55%,
+#8b5cf6 80%,
+#a78bfa 100%
+);
+
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+
+text-shadow:
+0 0 10px rgba(99,102,241,0.25),
+0 0 20px rgba(139,92,246,0.18);
+}
+
+
+.brand:hover span{
+text-shadow: 0 0 18px rgba(99,102,241,0.5);
+}
+
+/* SEARCH BAR */
+.search-box{
+background:#020617;
+border:1px solid rgba(125,211,252,0.25);
+color:white;
+width:260px;
+}
+
+.search-box::placeholder{
+color:#94a3b8;
+}
+
+/* AVATAR */
+.avatar{
+width:44px;
+height:44px;
+border-radius:50%;
+background:linear-gradient(135deg,#0ea5e9,#6366f1);
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:700;
+cursor:pointer;
+}
+
+/* ===== PROGRESS TABS ===== */
+.stat-card{
+background:linear-gradient(145deg,#0f172a,#020617);
+border:1px solid rgba(125,211,252,0.18);
+border-radius:20px;
+padding:22px;
+transition:0.3s;
+}
+
+.stat-card:hover{
+transform:translateY(-5px);
+border-color:#38bdf8;
+box-shadow:0 15px 35px rgba(0,0,0,0.5);
+}
+
+.stat-value{
+font-size:28px;
+font-weight:700;
+color:#7dd3fc;
+}
+
+.stat-label{
+font-size:14px;
+opacity:0.7;
+}
+
+/* ===== SECTION TITLE ===== */
+.section-title{
+margin-top:50px;
+font-size:28px;
+font-weight:700;
+color:#7dd3fc;
+text-align:center;
+}
+
+/* ===== SKILL CARDS ===== */
+.skill-card{
+margin-top:25px;
+background:linear-gradient(160deg,#0f172a,#020617);
+border:1px solid rgba(125,211,252,0.15);
+border-radius:22px;
+overflow:hidden;
+transition:0.35s;
+cursor:pointer;
+}
+
+.skill-card:hover{
+transform:translateY(-8px);
+border-color:#38bdf8;
+box-shadow:0 20px 40px rgba(0,0,0,0.6);
+}
+
+.skill-img{
+height:170px;
+width:100%;
+object-fit:cover;
+}
+
+.skill-body{
+padding:18px;
+}
+
+.skill-title{
+font-size:18px;
+font-weight:600;
+}
+
+.skill-meta{
+font-size:14px;
+color:#94a3b8;
+}
+
+.tutor-count{
+margin-top:6px;
+font-size:13px;
+color:#7dd3fc;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-glass px-4 py-3">
+
+<div class="brand">
+<img src="{% static 'core/logo.png' %}">
+<span>SkillLink</span>
+</div>
+
+<div class="ms-auto d-flex align-items-center gap-3">
+
+<input id="skillSearch"
+class="form-control search-box rounded-pill px-3"
+placeholder="Search skills...">
+
+<div class="dropdown">
+<div class="avatar" data-bs-toggle="dropdown">
+{{ avatar_letter }}
+</div>
+
+<ul class="dropdown-menu dropdown-menu-end">
+<li><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></li>
+<li><a class="dropdown-item text-danger" href="{% url 'learn_login' %}?mode=login">Logout</a></li>
+</ul>
+</div>
+
+</div>
+
+</nav>
+
+<!-- ===== USER PROGRESS STRIP ===== -->
+<div class="container mt-5">
+
+<div class="row g-4">
+
+<div class="col-md-3">
+<div class="stat-card">
+<div class="stat-value">{{ profile_completion }}%</div>
+<div class="stat-label">Profile Completion</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="stat-card">
+<div class="stat-value">5🔥</div>
+<div class="stat-label">Learning Streak</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="stat-card">
+<div class="stat-value">3</div>
+<div class="stat-label">Skills Learned</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="stat-card">
+<div class="stat-value">8</div>
+<div class="stat-label">Learning Engagement</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ===== MARKETPLACE ===== -->
+<div class="container">
+
+<div class="section-title">
+Explore High Value Skills
+</div>
+
+<div class="row" id="skillsContainer">
+
+<!-- CARD START -->
+<div class="col-md-3 skill-item">
+<div class="skill-card">
+<img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935" class="skill-img">
+<div class="skill-body">
+<div class="skill-title">Backend Development</div>
+<div class="skill-meta">APIs • Databases • Production</div>
+<div class="tutor-count">12 Tutors Available</div>
+</div>
+</div>
+</div>
+
+<div class="col-md-3 skill-item">
+<div class="skill-card">
+<img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c" class="skill-img">
+<div class="skill-body">
+<div class="skill-title">System Design</div>
+<div class="skill-meta">Scalability • Architecture</div>
+<div class="tutor-count">10 Tutors Available</div>
+</div>
+</div>
+</div>
+
+<div class="col-md-3 skill-item">
+<div class="skill-card">
+<img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa" class="skill-img">
+<div class="skill-body">
+<div class="skill-title">Cloud Engineering</div>
+<div class="skill-meta">AWS • CI/CD • Docker</div>
+<div class="tutor-count">15 Tutors Available</div>
+</div>
+</div>
+</div>
+
+<div class="col-md-3 skill-item">
+<div class="skill-card">
+<img src="https://images.unsplash.com/photo-1509228468518-180dd4864904" class="skill-img">
+<div class="skill-body">
+<div class="skill-title">Data Engineering</div>
+<div class="skill-meta">ETL • Pipelines</div>
+<div class="tutor-count">8 Tutors Available</div>
+</div>
+</div>
+</div>
+
+<div class="col-md-3 skill-item">
+<div class="skill-card">
+<img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" class="skill-img">
+<div class="skill-body">
+<div class="skill-title">Full Stack Development</div>
+<div class="skill-meta">React • Django • REST</div>
+<div class="tutor-count">14 Tutors Available</div>
+</div>
+</div>
+</div>
+
+<div class="col-md-3 skill-item">
+<div class="skill-card">
+<img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31" class="skill-img">
+<div class="skill-body">
+<div class="skill-title">DevOps Engineering</div>
+<div class="skill-meta">CI/CD • Kubernetes</div>
+<div class="tutor-count">9 Tutors Available</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- SEARCH SCRIPT -->
+<script>
+const searchInput = document.getElementById("skillSearch");
+const cards = document.querySelectorAll(".skill-item");
+
+searchInput.addEventListener("input", function(){
+const value = this.value.toLowerCase();
+
+cards.forEach(card => {
+const text = card.innerText.toLowerCase();
+card.style.display = text.includes(value) ? "" : "none";
+});
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+

@@ -68,8 +68,10 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body text-center d-grid gap-3 p-4">
-                    <button class="btn btn-outline-info rounded-pill">I want to Learn</button>
-                    <button class="btn btn-outline-info rounded-pill">I want to Teach</button>
+                    <button class="btn btn-outline-info rounded-pill"
+                    onclick="window.location.href='{% url 'learn_login' %}'">I want to Learn</button>
+                    <button class="btn btn-outline-info rounded-pill" 
+                    onclick="window.location.href='{% url 'tutor' %}'">I want to Teach</button>
                     <button class="btn btn-outline-info rounded-pill">I want to Hire</button>
                 </div>
             </div>

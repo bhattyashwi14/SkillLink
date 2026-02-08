@@ -28,3 +28,30 @@ class Profile(models.Model):
 
     def get_skills_list(self):
         return [s.strip() for s in self.skills.split(',')]
+    
+
+class StudentProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    full_name = models.CharField(max_length=100, blank=True)
+    semester = models.CharField(max_length=20, blank=True)
+    department = models.CharField(max_length=100, blank=True)
+    skills = models.TextField(blank=True)
+    linkedin = models.URLField(blank=True)
+    github = models.URLField(blank=True)
+
+    profile_completed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.email
+        
+class TutorProfile(models.Model):
+    USER_TYPES = (
+        ('student', 'Student'),
+        ('tutor', 'Tutor'),
+        ('company', 'Company'),
+    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user_type = models.CharField(max_length=10, choices=USER_TYPES, default='student')
+    def __str__(self):
+        return f"{self.user.username} ({self.user_type})"     
