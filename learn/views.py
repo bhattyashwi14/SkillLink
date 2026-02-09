@@ -6,6 +6,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from core.models import StudentProfile
 
+
+from tutor.models import TutorProfile, Skill 
+from django.shortcuts import get_object_or_404
+
 def learn_login(request):
     mode = request.GET.get("mode")  # login OR signup
     if mode=="login":
@@ -199,15 +203,36 @@ def dashboard(request):
     # Create profile automatically if not exists
     profile, created = StudentProfile.objects.get_or_create(user=user)
 
+    available_skills = Skill.objects.all()
+    print(f"DEBUG: Number of skills found: {available_skills.count()}")
+    for s in available_skills:
+        print(f"DEBUG: Skill Name: {s.name}")
     # Force profile completion for new users
     if not profile.profile_completed:
         return redirect("profile")
-
+    
+    # available_skills = Skill.objects.filter(
+    #     tutorprofile__is_approved=True
+    # ).distinct()
+    available_teaching_skills = TutorProfile.objects.filter(
+        is_approved=True
+    ).exclude(
+        teaching_skills__isnull=True
+    ).exclude(
+        teaching_skills=""
+    ).values_list('teaching_skills', flat=True).distinct()
     # Avatar letter logic
     avatar_letter = "S"
     if profile.full_name:
         avatar_letter = profile.full_name[0].upper()
 
+    
+    # available_skills = Skill.objects.all() 
+
+    # Keep your debug prints to be sure
+    print(f"DEBUG: Number of skills found: {available_skills.count()}")
+
+    
     # Profile completion percentage
     completion = 0
     if profile.full_name:
@@ -226,11 +251,22 @@ def dashboard(request):
     return render(request, "core/learner_dashboard.html", {
         "profile_completed": profile.profile_completed,
         "profile": profile,
+        "available_skills": available_teaching_skills,
         "avatar_letter": avatar_letter,
         "profile_completion": completion
     })
-
-
+def skill_tutors(request, skill_name):
+    # skill = get_object_or_404(Skill, name=skill_name)
+    # Only show tutors who are approved AND have this skill
+    # tutors = TutorProfile.objects.filter(skills=skill, is_approved=True)
+    # FIX: Filter by the teaching_skills text field instead of the Skill model
+    tutors = TutorProfile.objects.filter(teaching_skills=skill_name, is_approved=True)
+    
+    return render(request, "core/skill_tutors.html", {
+        "skill_name": skill_name, # Pass the string
+        "tutors": tutors
+    })
+    
 def profile(request):
 
     email = request.session.get("email")
@@ -260,7 +296,6 @@ def profile(request):
     return render(request, "core/learner_profile.html", {
         "profile": profile
     })
-
 
 
 

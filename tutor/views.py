@@ -310,7 +310,7 @@ def tutor_dashboard(request):
     # Fetch the profile or redirect to complete it if it doesn't exist
     try:
         profile = request.user.tutor_profile
-    except Tutor.DoesNotExist:
+    except TutorProfile.DoesNotExist:
         return redirect('complete_profile')
         
     availabilities = profile.availabilities.all()
@@ -322,36 +322,34 @@ def tutor_dashboard(request):
     return render(request, "tutor/tutor_dashboard.html", context)
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-
 @login_required
 def complete_profile(request):
-    profile = getattr(request.user, 'tutor_profile', None)
-    if profile and profile.bio: # Using bio as a check for 'completeness'
-        return redirect('tutor_dashboard')
-    # Use the related_name 'tutor_profile' from your model
     # This ensures a profile object exists for the current user
     profile, created = TutorProfile.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        # 1. Update Basic Info
+        # 1. Update Basic Info (Matching your Offcanvas Form names)
         full_name = request.POST.get("full_name")
         profile.bio = request.POST.get("bio")
-        
-        # Update User model first_name
+        profile.github_profile = request.POST.get("github")
+        profile.linkedin_profile = request.POST.get("linkedin")
+        profile.teaching_skills = request.POST.get("tutoring_skills")
+
         if full_name:
             request.user.first_name = full_name
             request.user.save()
 
         # 2. Handle File Uploads
-        if request.FILES.get("proof_file"):
-            profile.proof_of_skill = request.FILES.get("proof_file")
         if request.FILES.get("profile_pic"):
             profile.profile_pic = request.FILES.get("profile_pic")
+        
+        # We keep the proof_of_skill optional for side-panel updates
+        if request.FILES.get("proof_file"):
+            profile.proof_of_skill = request.FILES.get("proof_file")
 
         profile.save()
 
-        # 3. Handle Skills (ManyToManyField)
-        # request.POST.getlist grabs ALL checked values
+        # 3. Handle Skills (Many-to-Many)
         skill_names = request.POST.getlist("skills")
         other_skills = request.POST.get("other_skills")
         
@@ -359,19 +357,18 @@ def complete_profile(request):
             extra_skills = [s.strip() for s in other_skills.split(",") if s.strip()]
             skill_names.extend(extra_skills)
 
-        # Clear existing skills and re-add (prevents duplicates)
-        profile.skills.clear()
-        for name in skill_names:
-            skill_obj, _ = Skill.objects.get_or_create(name=name)
-            profile.skills.add(skill_obj)
+        if skill_names: # Only clear and update if skills are provided
+            profile.skills.clear()
+            for name in skill_names:
+                skill_obj, _ = Skill.objects.get_or_create(name=name)
+                profile.skills.add(skill_obj)
 
-        # 4. Handle Availability (ForeignKey)
+        # 4. Handle Availability
         selected_days = request.POST.getlist("available_days")
         start_t = request.POST.get("start_time")
         end_t = request.POST.get("end_time")
 
         if selected_days and start_t and end_t:
-            # Delete old ones to avoid messy data
             Availability.objects.filter(tutor=profile).delete()
             for day in selected_days:
                 Availability.objects.create(
@@ -381,9 +378,85 @@ def complete_profile(request):
                     end_time=end_t
                 )
 
+        messages.success(request, "Profile updated successfully!")
         return redirect("tutor_dashboard")
 
-    return render(request, "tutor/complete_profile.html")# from django.shortcuts import render,redirect
+    # If it's a GET request, we only redirect to dashboard IF the profile is truly complete
+    # (Checking bio, skills, and availability)
+    if profile.bio and profile.skills.exists() and profile.availabilities.exists():
+        return redirect('tutor_dashboard')
+
+    return render(request, "tutor/complete_profile.html")
+# =================================================================================
+# =================================================================================
+
+# @login_required
+# def complete_profile(request):
+#     profile = getattr(request.user, 'tutor_profile', None)
+#     if profile and profile.bio: # Using bio as a check for 'completeness'
+#         return redirect('tutor_dashboard')
+#     # Use the related_name 'tutor_profile' from your model
+#     # This ensures a profile object exists for the current user
+#     profile, created = TutorProfile.objects.get_or_create(user=request.user)
+
+#     if request.method == "POST":
+#         # 1. Update Basic Info
+#         full_name = request.POST.get("full_name")
+#         profile.bio = request.POST.get("bio")
+#         profile.github_profile = request.POST.get("github") # Ensure name matches your HTML input name
+#         profile.linkedin_profile = request.POST.get("linkedin")
+#         profile.teaching_skills = request.POST.get("tutoring_skills")
+#         # Update User model first_name
+#         if full_name:
+#             request.user.first_name = full_name
+#             request.user.save()
+
+#         # 2. Handle File Uploads
+#         if request.FILES.get("proof_file"):
+#             profile.proof_of_skill = request.FILES.get("proof_file")
+#         if request.FILES.get("profile_pic"):
+#             profile.profile_pic = request.FILES.get("profile_pic")
+        
+
+#         profile.save()
+
+#         # 3. Handle Skills (ManyToManyField)
+#         # request.POST.getlist grabs ALL checked values
+#         skill_names = request.POST.getlist("skills")
+#         other_skills = request.POST.get("other_skills")
+        
+#         if other_skills:
+#             extra_skills = [s.strip() for s in other_skills.split(",") if s.strip()]
+#             skill_names.extend(extra_skills)
+
+#         # Clear existing skills and re-add (prevents duplicates)
+#         profile.skills.clear()
+#         for name in skill_names:
+#             skill_obj, _ = Skill.objects.get_or_create(name=name)
+#             profile.skills.add(skill_obj)
+
+#         # 4. Handle Availability (ForeignKey)
+#         selected_days = request.POST.getlist("available_days")
+#         start_t = request.POST.get("start_time")
+#         end_t = request.POST.get("end_time")
+
+#         if selected_days and start_t and end_t:
+#             # Delete old ones to avoid messy data
+#             Availability.objects.filter(tutor=profile).delete()
+#             for day in selected_days:
+#                 Availability.objects.create(
+#                     tutor=profile,
+#                     day_of_week=day,
+#                     start_time=start_t,
+#                     end_time=end_t
+#                 )
+
+#         return redirect("tutor_dashboard")
+
+#     return render(request, "tutor/complete_profile.html")# from django.shortcuts import render,redirect
+# =================================================================================
+# =================================================================================
+
 # from numpy import random
 # from django.core.mail import send_mail
 # import time

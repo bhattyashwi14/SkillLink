@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
 from tutor import views
+from django.contrib.auth.views import LogoutView
+
+
 urlpatterns = [
     path('tutor',views.tutor_auth,name='tutor'),
     # path("tutor/", views.tutor_login, name="tutor_login"),
@@ -10,6 +13,7 @@ urlpatterns = [
     path('tutor/register/', views.tutor_register, name='tutor_register'),
     path("complete-profile/", views.complete_profile, name="complete_profile"),
     path("dashboard/", views.tutor_dashboard, name="tutor_dashboard"),
+    path('logout/', LogoutView.as_view(next_page='tutor_login'), name='logout'),
 
 
 ]

@@ -1018,7 +1018,7 @@ placeholder="Search skills...">
 </div>
 
 <!-- ===== MARKETPLACE ===== -->
-<div class="container">
+{% comment %} <div class="container">
 
 <div class="section-title">
 Explore High Value Skills
@@ -1094,9 +1094,62 @@ Explore High Value Skills
 </div>
 
 </div>
-</div>
-
-<!-- SEARCH SCRIPT -->
+</div> {% endcomment %}
+{% comment %} <div class="row g-4">
+    {% for skill in available_skills %}
+    <div class="col-md-3">
+        <a href="{% url 'skill_tutors' skill.name %}" class="text-decoration-none">
+            <div class="card h-100 bg-dark border-secondary hover-effect">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-white">{{ skill.name }}</h5>
+                    <p class="text-info small">{{ skill.tutorprofile_set.count }} Tutors Available</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% empty %}
+    <p class="text-muted">No verified tutors available yet. Check back soon!</p>
+    {% endfor %}
+</div> {% endcomment %}
+{% comment %} <div class="container mt-5">
+    <div class="row g-4">
+        {% if available_skills %}
+            {% for skill in available_skills %}
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white p-3">
+                        {{ skill.name }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center p-5" style="border: 5px solid yellow;">
+                <h1 style="color: yellow !important; background: black;">
+                    NO SKILLS FOUND IN DATABASE!
+                </h1>
+                <p style="color: white;">If you see this, the view is working but the Skill table is empty.</p>
+            </div>
+        {% endif %}
+    </div>
+</div> {% endcomment %}
+<div class="row g-4 mt-4 px-4">
+    <h2 class="section-title mb-4">Explore Teaching Expertise</h2>
+    {% for skill_text in available_skills %}
+    <div class="col-md-3 skill-item"> <a href="{% url 'skill_tutors' skill_text %}" class="text-decoration-none">
+            <div class="skill-card h-100">
+                <div class="skill-body text-center p-4">
+                    <h5 class="text-white fw-bold mb-2">{{ skill_text }}</h5>
+                    <p class="tutor-count">View Available Tutors</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <h2 style="color: #ffffff !important; font-weight: bold;">NO TEACHING SKILLS FOUND</h2>
+        <p style="color: #7dd3fc !important;">Once an admin approves a tutor with teaching expertise, it will appear here.</p>
+    </div>
+    {% endfor %}
+</div><!-- SEARCH SCRIPT -->
 <script>
 const searchInput = document.getElementById("skillSearch");
 const cards = document.querySelectorAll(".skill-item");
