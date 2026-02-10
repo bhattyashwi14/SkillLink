@@ -267,12 +267,18 @@ def dashboard(request):
 
     skills_data = []
 
+    # ⭐ BOOKING COUNT MUST BE OUTSIDE LOOP
+    upcoming_sessions_count = Booking.objects.filter(
+    student=user
+        ).count()
+
+
     skills = Skill.objects.all()
 
     for skill in skills:
 
         approved_tutors = TutorProfile.objects.filter(
-            skills__id=skill.id,   # 🔥 IMPORTANT FIX
+            skills__id=skill.id,
             is_approved=True
         ).distinct()
 
@@ -283,42 +289,19 @@ def dashboard(request):
                 "name": skill.name,
                 "count": tutor_count
             })
-        
-    upcoming_sessions_count = Booking.objects.filter(
-    student=user,
-    status="booked"
-    ).count()
+
 
 
 
     return render(request, "core/learner_dashboard.html", {
-
-        "profile_completed": profile.profile_completed,
-        "profile": profile,
-        "available_skills": available_teaching_skills,
-        "avatar_letter": avatar_letter,
-        "profile_completion": completion
-    })
-def skill_tutors(request, skill_name):
-    # skill = get_object_or_404(Skill, name=skill_name)
-    # Only show tutors who are approved AND have this skill
-    # tutors = TutorProfile.objects.filter(skills=skill, is_approved=True)
-    # FIX: Filter by the teaching_skills text field instead of the Skill model
-    tutors = TutorProfile.objects.filter(teaching_skills=skill_name, is_approved=True)
-    
-    return render(request, "core/skill_tutors.html", {
-        "skill_name": skill_name, # Pass the string
-        "tutors": tutors
-    })
-    
-
     "profile_completed": profile.profile_completed,
     "profile": profile,
     "avatar_letter": avatar_letter,
     "profile_completion": completion,
     "skills_data": skills_data,
     "upcoming_sessions_count": upcoming_sessions_count,
-    })
+        })
+
 
 
 

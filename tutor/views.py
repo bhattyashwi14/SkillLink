@@ -154,7 +154,7 @@ def tutor_login_form(request):
             })
 
         login(request, user)
-        return redirect("complete_profile")
+        return redirect("tutor:complete_profile")
         # print("login successfull!")
     return render(request, "tutor/login.html")
 
@@ -275,7 +275,7 @@ def tutor_register(request):
             # print("account creayed successfully!")
             login(request, user)
 
-            return redirect("complete_profile")
+            return redirect("tutor:complete_profile")
     return render(request, "tutor/signup.html", {
         "show_otp": False,
         "show_password": False
@@ -316,7 +316,7 @@ def tutor_dashboard(request):
     try:
         profile = request.user.tutor_profile
     except TutorProfile.DoesNotExist:
-        return redirect('complete_profile')
+        return redirect('tutor:complete_profile')
         
     availabilities = profile.availabilities.all()
     
@@ -416,7 +416,7 @@ def complete_profile(request):
 
     # 🔥 BLOCK NON TUTORS
     if request.user.profile.user_type != "tutor":
-        return redirect("learn_login")
+        return redirect("login.html")
 
     profile, created = TutorProfile.objects.get_or_create(user=request.user)
 
@@ -495,13 +495,13 @@ def complete_profile(request):
                 )
 
         messages.success(request, "Profile updated successfully!")
-        return redirect("tutor_dashboard")
+        return redirect("tutor:tutor_dashboard")
 
  
     # If it's a GET request, we only redirect to dashboard IF the profile is truly complete
     # (Checking bio, skills, and availability)
     if profile.bio and profile.skills.exists() and profile.availabilities.exists():
-        return redirect('tutor_dashboard')
+        return redirect('tutor:tutor_dashboard')
 
     return render(request, "tutor/complete_profile.html")
 # =================================================================================
@@ -679,7 +679,7 @@ def book_slot(request, slot_id):
 
     if already_booked:
         messages.error(request, "Slot already booked")
-        return redirect("tutor_slots", tutor_id=slot.tutor.id)
+        return redirect("tutor:tutor_slots", tutor_id=slot.tutor.id)
 
     Booking.objects.create(
         student=request.user,
@@ -689,7 +689,7 @@ def book_slot(request, slot_id):
 
     messages.success(request, "Session booked successfully")
 
-    return redirect("tutor_slots", tutor_id=slot.tutor.id)
+    return redirect("tutor:tutor_slots", tutor_id=slot.tutor.id)
 
 
 # from django.shortcuts import render,redirect

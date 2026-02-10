@@ -104,7 +104,7 @@ Available Slots — {{ tutor.user.first_name|default:tutor.user.username }}
 🕒 {{ slot.start_time }} — {{ slot.end_time }}
 </div>
 
-<a href="{% url 'book_slot' slot.id %}">
+<a href="{% url 'tutor:book_slot' slot.id %}">
 <button class="book-btn">
 Book Session 🚀
 </button>

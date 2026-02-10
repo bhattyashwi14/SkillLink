@@ -19,7 +19,6 @@ class TutorProfileAdmin(admin.ModelAdmin):
 
 admin.site.register(Skill)
 
-admin.site.register(TutorProfile)
 admin.site.register(Availability)
 
 
@@ -33,4 +32,3 @@ class TutorProfileAdmin(admin.ModelAdmin):
 
 # Register the other models so you can see them too
 
-admin.site.register(Availability)
