@@ -15,12 +15,19 @@ class TutorProfile(models.Model):
     profile_pic = models.ImageField(upload_to='tutor_pics/', null=True, blank=True)
     
     # Skills Many-to-Many
+
+    skills = models.ManyToManyField(Skill, blank=True)
+    teaching_skills = models.TextField(max_length=500, blank=True, null=True)
+
     skills = models.ManyToManyField("tutor.Skill", blank=True)
     
+
     # Verification & Stats
     proof_of_skill = models.FileField(upload_to='tutor_proofs/', null=True, blank=True)
     is_approved = models.BooleanField(default=False)
     total_students = models.IntegerField(default=0)
+    github_profile = models.URLField(max_length=255, blank=True, null=True)
+    linkedin_profile = models.URLField(max_length=255, blank=True, null=True)
     rating = models.FloatField(default=0.0)
     linkedin = models.URLField(blank=True, null=True)
     github = models.URLField(blank=True, null=True)
