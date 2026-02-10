@@ -267,28 +267,39 @@ def dashboard(request):
 
     skills_data = []
 
-    # ⭐ BOOKING COUNT MUST BE OUTSIDE LOOP
+    # ⭐ BOOKING COUNT
     upcoming_sessions_count = Booking.objects.filter(
-    student=user
-        ).count()
+        student=user,
+        status="booked"
+    ).count()
+
+    # ⭐ BUILD SKILLS FROM TEACHING_SKILLS TEXT
+    skills_map = {}
+
+    approved_tutors = TutorProfile.objects.filter(
+    is_approved=True,
+    teaching_skills__isnull=False
+        ).exclude(teaching_skills="")
+
+    for tutor in approved_tutors:
+
+        raw_skills = tutor.teaching_skills.split(",")
+
+        for skill in raw_skills:
+
+            clean_skill = skill.strip().upper()
+
+            if not clean_skill:
+                continue
+
+            skills_map[clean_skill] = skills_map.get(clean_skill, 0) + 1
 
 
-    skills = Skill.objects.all()
-
-    for skill in skills:
-
-        approved_tutors = TutorProfile.objects.filter(
-            skills__id=skill.id,
-            is_approved=True
-        ).distinct()
-
-        tutor_count = approved_tutors.count()
-
-        if tutor_count > 0:
-            skills_data.append({
-                "name": skill.name,
-                "count": tutor_count
-            })
+    # convert to template format
+    skills_data = [
+        {"name": skill, "count": count}
+        for skill, count in skills_map.items()
+    ]
 
 
 
@@ -338,16 +349,33 @@ def profile(request):
 
 def skill_tutors(request, skill_name):
 
-    skill = Skill.objects.get(name=skill_name)
+    normalized_skill = skill_name.strip().upper()
 
     tutors = TutorProfile.objects.filter(
-        skills=skill,
         is_approved=True
     )
 
+    filtered_tutors = []
+    added_ids = set()
+
+
+    for tutor in tutors:
+
+        if tutor.teaching_skills:
+
+            tutor_skills = [
+                s.strip().upper()
+                for s in tutor.teaching_skills.split(",")
+            ]
+
+            if normalized_skill in tutor_skills and tutor.id not in added_ids:
+                filtered_tutors.append(tutor)
+                added_ids.add(tutor.id)
+
+
     return render(request, "core/skill_tutors.html", {
-        "skill": skill,
-        "tutors": tutors
+        "skill": {"name": normalized_skill},
+        "tutors": filtered_tutors
     })
 
 

@@ -428,33 +428,23 @@ def complete_profile(request):
         profile.linkedin = request.POST.get("linkedin")
         profile.github = request.POST.get("github")
 
+        # ⭐⭐⭐ FIX — SAVE TEACHING SKILLS ⭐⭐⭐
+        profile.teaching_skills = request.POST.get("tutoring_skills")
 
         if full_name:
             request.user.first_name = full_name
             request.user.save()
 
-
-        # 2. Handle File Uploads
-
         # ===== FILE UPLOADS =====
         if request.FILES.get("proof_file"):
             profile.proof_of_skill = request.FILES.get("proof_file")
 
-
         if request.FILES.get("profile_pic"):
             profile.profile_pic = request.FILES.get("profile_pic")
-        
-        # We keep the proof_of_skill optional for side-panel updates
-        if request.FILES.get("proof_file"):
-            profile.proof_of_skill = request.FILES.get("proof_file")
 
         profile.save()
 
-
-        # 3. Handle Skills (Many-to-Many)
-
-        # ===== SKILLS =====
-
+        # ===== SKILLS (ManyToMany) =====
         skill_names = request.POST.getlist("skills")
         other_skills = request.POST.get("other_skills")
 
@@ -462,23 +452,13 @@ def complete_profile(request):
             extra = [s.strip() for s in other_skills.split(",") if s.strip()]
             skill_names.extend(extra)
 
-
-        if skill_names: # Only clear and update if skills are provided
+        if skill_names:
             profile.skills.clear()
             for name in skill_names:
                 skill_obj, _ = Skill.objects.get_or_create(name=name)
                 profile.skills.add(skill_obj)
 
-        # 4. Handle Availability
-
-        profile.skills.clear()
-
-        for name in skill_names:
-            skill_obj, _ = Skill.objects.get_or_create(name=name)
-            profile.skills.add(skill_obj)
-
         # ===== AVAILABILITY =====
-
         selected_days = request.POST.getlist("available_days")
         start_t = request.POST.get("start_time")
         end_t = request.POST.get("end_time")
@@ -497,13 +477,12 @@ def complete_profile(request):
         messages.success(request, "Profile updated successfully!")
         return redirect("tutor:tutor_dashboard")
 
- 
-    # If it's a GET request, we only redirect to dashboard IF the profile is truly complete
-    # (Checking bio, skills, and availability)
+    # GET REQUEST CHECK
     if profile.bio and profile.skills.exists() and profile.availabilities.exists():
         return redirect('tutor:tutor_dashboard')
 
     return render(request, "tutor/complete_profile.html")
+
 # =================================================================================
 # =================================================================================
 

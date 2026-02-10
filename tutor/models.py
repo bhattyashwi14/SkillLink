@@ -16,10 +16,12 @@ class TutorProfile(models.Model):
     
     # Skills Many-to-Many
 
+    # Skills Many-to-Many
     skills = models.ManyToManyField(Skill, blank=True)
+
+    # Teaching Skills (Text Input)
     teaching_skills = models.TextField(max_length=500, blank=True, null=True)
 
-    skills = models.ManyToManyField("tutor.Skill", blank=True)
     
 
     # Verification & Stats
