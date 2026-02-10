@@ -15,13 +15,16 @@ class TutorProfile(models.Model):
     profile_pic = models.ImageField(upload_to='tutor_pics/', null=True, blank=True)
     
     # Skills Many-to-Many
-    skills = models.ManyToManyField(Skill, blank=True)
+    skills = models.ManyToManyField("tutor.Skill", blank=True)
     
     # Verification & Stats
     proof_of_skill = models.FileField(upload_to='tutor_proofs/', null=True, blank=True)
     is_approved = models.BooleanField(default=False)
     total_students = models.IntegerField(default=0)
     rating = models.FloatField(default=0.0)
+    linkedin = models.URLField(blank=True, null=True)
+    github = models.URLField(blank=True, null=True)
+
 
     def __str__(self):
         return f"{self.user.username}'s Tutor Profile"
@@ -43,3 +46,39 @@ class Availability(models.Model):
 
     class Meta:
         verbose_name_plural = "Availabilities"
+
+class Booking(models.Model):
+    tutor = models.ForeignKey(
+        TutorProfile,
+        on_delete=models.CASCADE,
+        related_name="bookings"
+    )
+
+    student = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="student_bookings"
+    )
+
+    availability = models.ForeignKey(
+        Availability,
+        on_delete=models.CASCADE
+    )
+
+    booked_at = models.DateTimeField(auto_now_add=True)
+
+    STATUS_CHOICES = [
+        ("booked", "Booked"),
+        ("completed", "Completed"),
+        ("cancelled", "Cancelled"),
+    ]
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="booked"
+    )
+
+    def __str__(self):
+        return f"{self.student.username} → {self.tutor.user.username} ({self.availability.day_of_week})"
+
