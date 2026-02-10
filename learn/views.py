@@ -5,6 +5,7 @@ import time
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from core.models import StudentProfile
+from tutor.models import Skill, TutorProfile, Booking
 
 
 from tutor.models import TutorProfile, Skill 
@@ -198,9 +199,13 @@ def dashboard(request):
     if not email:
         return redirect("learn_login")
 
-    user = User.objects.get(email=email)
+    # Safe user fetch
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return redirect("learn_login")
 
-    # Create profile automatically if not exists
+    # Ensure student profile exists
     profile, created = StudentProfile.objects.get_or_create(user=user)
 
     available_skills = Skill.objects.all()
@@ -222,9 +227,15 @@ def dashboard(request):
         teaching_skills=""
     ).values_list('teaching_skills', flat=True).distinct()
     # Avatar letter logic
+    # Force profile completion
+    if not profile.profile_completed:
+        return redirect("profile")
+
+    # Avatar logic
     avatar_letter = "S"
     if profile.full_name:
         avatar_letter = profile.full_name[0].upper()
+
 
     
     # available_skills = Skill.objects.all() 
@@ -234,6 +245,8 @@ def dashboard(request):
 
     
     # Profile completion percentage
+
+    # Profile completion %
     completion = 0
     if profile.full_name:
         completion += 20
@@ -248,7 +261,38 @@ def dashboard(request):
     if profile.github:
         completion += 10
 
+    # ===============================
+    # ⭐ SKILL → TUTOR COUNT LOGIC
+    # ===============================
+
+    skills_data = []
+
+    skills = Skill.objects.all()
+
+    for skill in skills:
+
+        approved_tutors = TutorProfile.objects.filter(
+            skills__id=skill.id,   # 🔥 IMPORTANT FIX
+            is_approved=True
+        ).distinct()
+
+        tutor_count = approved_tutors.count()
+
+        if tutor_count > 0:
+            skills_data.append({
+                "name": skill.name,
+                "count": tutor_count
+            })
+        
+    upcoming_sessions_count = Booking.objects.filter(
+    student=user,
+    status="booked"
+    ).count()
+
+
+
     return render(request, "core/learner_dashboard.html", {
+
         "profile_completed": profile.profile_completed,
         "profile": profile,
         "available_skills": available_teaching_skills,
@@ -267,6 +311,18 @@ def skill_tutors(request, skill_name):
         "tutors": tutors
     })
     
+
+    "profile_completed": profile.profile_completed,
+    "profile": profile,
+    "avatar_letter": avatar_letter,
+    "profile_completion": completion,
+    "skills_data": skills_data,
+    "upcoming_sessions_count": upcoming_sessions_count,
+    })
+
+
+
+
 def profile(request):
 
     email = request.session.get("email")
@@ -296,6 +352,49 @@ def profile(request):
     return render(request, "core/learner_profile.html", {
         "profile": profile
     })
+
+def skill_tutors(request, skill_name):
+
+    skill = Skill.objects.get(name=skill_name)
+
+    tutors = TutorProfile.objects.filter(
+        skills=skill,
+        is_approved=True
+    )
+
+    return render(request, "core/skill_tutors.html", {
+        "skill": skill,
+        "tutors": tutors
+    })
+
+
+
+from tutor.models import Booking
+from django.contrib.auth.decorators import login_required
+
+
+@login_required
+def upcoming_sessions(request):
+
+    email = request.session.get("email")
+
+    if not email:
+        return redirect("learn_login")
+
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return redirect("learn_login")
+
+    bookings = Booking.objects.filter(
+        student=user,
+        status="booked"
+    ).select_related("tutor", "availability")
+
+    return render(request, "core/upcoming_sessions.html", {
+        "bookings": bookings
+    })
+
 
 
 

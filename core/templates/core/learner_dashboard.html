@@ -1008,14 +1008,19 @@ placeholder="Search skills...">
 </div>
 
 <div class="col-md-3">
+
+<a href="{% url 'upcoming_sessions' %}" style="text-decoration:none; color:inherit;">
+
 <div class="stat-card">
-<div class="stat-value">8</div>
-<div class="stat-label">Learning Engagement</div>
+<div class="stat-value">
+{{ upcoming_sessions_count|default:0 }}
 </div>
+<div class="stat-label">Learning Evaluation</div>
+</div>
+</a>
 </div>
 
-</div>
-</div>
+
 
 <!-- ===== MARKETPLACE ===== -->
 {% comment %} <div class="container">
@@ -1027,73 +1032,27 @@ Explore High Value Skills
 <div class="row" id="skillsContainer">
 
 <!-- CARD START -->
+{% for skill in skills_data %}
 <div class="col-md-3 skill-item">
+    
+<a href="{% url 'skill_tutors' skill.name %}" style="text-decoration:none; color:inherit;">
 <div class="skill-card">
-<img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935" class="skill-img">
-<div class="skill-body">
-<div class="skill-title">Backend Development</div>
-<div class="skill-meta">APIs • Databases • Production</div>
-<div class="tutor-count">12 Tutors Available</div>
-</div>
-</div>
-</div>
+<img src="https://tse1.mm.bing.net/th?q={{ skill.name|lower }}+software+development+coding&pid=Api"
+     class="skill-img">
 
-<div class="col-md-3 skill-item">
-<div class="skill-card">
-<img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c" class="skill-img">
 <div class="skill-body">
-<div class="skill-title">System Design</div>
-<div class="skill-meta">Scalability • Architecture</div>
-<div class="tutor-count">10 Tutors Available</div>
-</div>
-</div>
-</div>
-
-<div class="col-md-3 skill-item">
-<div class="skill-card">
-<img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa" class="skill-img">
-<div class="skill-body">
-<div class="skill-title">Cloud Engineering</div>
-<div class="skill-meta">AWS • CI/CD • Docker</div>
-<div class="tutor-count">15 Tutors Available</div>
-</div>
-</div>
-</div>
-
-<div class="col-md-3 skill-item">
-<div class="skill-card">
-<img src="https://images.unsplash.com/photo-1509228468518-180dd4864904" class="skill-img">
-<div class="skill-body">
-<div class="skill-title">Data Engineering</div>
-<div class="skill-meta">ETL • Pipelines</div>
-<div class="tutor-count">8 Tutors Available</div>
-</div>
-</div>
-</div>
-
-<div class="col-md-3 skill-item">
-<div class="skill-card">
-<img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" class="skill-img">
-<div class="skill-body">
-<div class="skill-title">Full Stack Development</div>
-<div class="skill-meta">React • Django • REST</div>
-<div class="tutor-count">14 Tutors Available</div>
-</div>
-</div>
-</div>
-
-<div class="col-md-3 skill-item">
-<div class="skill-card">
-<img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31" class="skill-img">
-<div class="skill-body">
-<div class="skill-title">DevOps Engineering</div>
-<div class="skill-meta">CI/CD • Kubernetes</div>
-<div class="tutor-count">9 Tutors Available</div>
-</div>
-</div>
+<div class="skill-title">{{ skill.name }}</div>
+<div class="skill-meta">Skill Based Learning</div>
+<div class="tutor-count">{{ skill.count }} Tutors Available</div>
 </div>
 
 </div>
+</a>
+</div>
+{% endfor %}
+
+</div>
+
 </div> {% endcomment %}
 {% comment %} <div class="row g-4">
     {% for skill in available_skills %}
@@ -1150,6 +1109,10 @@ Explore High Value Skills
     </div>
     {% endfor %}
 </div><!-- SEARCH SCRIPT -->
+
+
+<!-- SEARCH SCRIPT -->
+
 <script>
 const searchInput = document.getElementById("skillSearch");
 const cards = document.querySelectorAll(".skill-item");

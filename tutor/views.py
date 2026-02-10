@@ -6,6 +6,11 @@ from django.core.mail import send_mail
 from django.contrib import messages
 import random
 from .models import TutorProfile, Skill, Availability
+from .models import Booking
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from .models import Booking, Availability
+
 
 # ======================================================================================
 
@@ -322,6 +327,7 @@ def tutor_dashboard(request):
     return render(request, "tutor/tutor_dashboard.html", context)
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+
 @login_required
 def complete_profile(request):
     # This ensures a profile object exists for the current user
@@ -335,11 +341,106 @@ def complete_profile(request):
         profile.linkedin_profile = request.POST.get("linkedin")
         profile.teaching_skills = request.POST.get("tutoring_skills")
 
+
+# @login_required
+# def complete_profile(request):
+#     # profile = getattr(request.user, 'tutor_profile', None)
+#     # if profile and profile.bio: # Using bio as a check for 'completeness'
+#     #     return redirect('tutor_dashboard')
+#     # # Use the related_name 'tutor_profile' from your model
+#     # # This ensures a profile object exists for the current user
+#     # profile, created = TutorProfile.objects.get_or_create(user=request.user)
+
+#     profile, created = TutorProfile.objects.get_or_create(user=request.user)
+
+
+#     if request.method == "POST":
+#         # 1. Update Basic Info
+#         full_name = request.POST.get("full_name")
+#         profile.bio = request.POST.get("bio")
+#         profile.linkedin = request.POST.get("linkedin")
+#         profile.github = request.POST.get("github")
+
+        
+#         # Update User model first_name
+#         if full_name:
+#             request.user.first_name = full_name
+#             request.user.save()
+
+#         # 2. Handle File Uploads
+#         if request.FILES.get("proof_file"):
+#             profile.proof_of_skill = request.FILES.get("proof_file")
+#         if request.FILES.get("profile_pic"):
+#             profile.profile_pic = request.FILES.get("profile_pic")
+
+#         profile.save()
+
+#         # 3. Handle Skills (ManyToManyField)
+#         # request.POST.getlist grabs ALL checked values
+#         skill_names = request.POST.getlist("skills")
+#         other_skills = request.POST.get("other_skills")
+        
+#         if other_skills:
+#             extra_skills = [s.strip() for s in other_skills.split(",") if s.strip()]
+#             skill_names.extend(extra_skills)
+
+#         # Clear existing skills and re-add (prevents duplicates)
+#         profile.skills.clear()
+#         for name in skill_names:
+#             skill_obj, _ = Skill.objects.get_or_create(name=name)
+#             profile.skills.add(skill_obj)
+
+#         # 4. Handle Availability (ForeignKey)
+#         selected_days = request.POST.getlist("available_days")
+#         start_t = request.POST.get("start_time")
+#         end_t = request.POST.get("end_time")
+
+#         if selected_days and start_t and end_t:
+#             # Delete old ones to avoid messy data
+#             Availability.objects.filter(tutor=profile).delete()
+#             for day in selected_days:
+#                 Availability.objects.create(
+#                     tutor=profile,
+#                     day_of_week=day,
+#                     start_time=start_t,
+#                     end_time=end_t
+#                 )
+
+#         return redirect("tutor_dashboard")
+
+#     return render(request, "tutor/complete_profile.html")
+
+
+@login_required
+def complete_profile(request):
+
+    # 🔥 BLOCK NON TUTORS
+    if request.user.profile.user_type != "tutor":
+        return redirect("learn_login")
+
+    profile, created = TutorProfile.objects.get_or_create(user=request.user)
+
+    if request.method == "POST":
+
+        # ===== BASIC INFO =====
+        full_name = request.POST.get("full_name")
+        profile.bio = request.POST.get("bio")
+        profile.linkedin = request.POST.get("linkedin")
+        profile.github = request.POST.get("github")
+
+
         if full_name:
             request.user.first_name = full_name
             request.user.save()
 
+
         # 2. Handle File Uploads
+
+        # ===== FILE UPLOADS =====
+        if request.FILES.get("proof_file"):
+            profile.proof_of_skill = request.FILES.get("proof_file")
+
+
         if request.FILES.get("profile_pic"):
             profile.profile_pic = request.FILES.get("profile_pic")
         
@@ -349,13 +450,18 @@ def complete_profile(request):
 
         profile.save()
 
+
         # 3. Handle Skills (Many-to-Many)
+
+        # ===== SKILLS =====
+
         skill_names = request.POST.getlist("skills")
         other_skills = request.POST.get("other_skills")
-        
+
         if other_skills:
-            extra_skills = [s.strip() for s in other_skills.split(",") if s.strip()]
-            skill_names.extend(extra_skills)
+            extra = [s.strip() for s in other_skills.split(",") if s.strip()]
+            skill_names.extend(extra)
+
 
         if skill_names: # Only clear and update if skills are provided
             profile.skills.clear()
@@ -364,12 +470,22 @@ def complete_profile(request):
                 profile.skills.add(skill_obj)
 
         # 4. Handle Availability
+
+        profile.skills.clear()
+
+        for name in skill_names:
+            skill_obj, _ = Skill.objects.get_or_create(name=name)
+            profile.skills.add(skill_obj)
+
+        # ===== AVAILABILITY =====
+
         selected_days = request.POST.getlist("available_days")
         start_t = request.POST.get("start_time")
         end_t = request.POST.get("end_time")
 
         if selected_days and start_t and end_t:
             Availability.objects.filter(tutor=profile).delete()
+
             for day in selected_days:
                 Availability.objects.create(
                     tutor=profile,
@@ -381,6 +497,7 @@ def complete_profile(request):
         messages.success(request, "Profile updated successfully!")
         return redirect("tutor_dashboard")
 
+ 
     # If it's a GET request, we only redirect to dashboard IF the profile is truly complete
     # (Checking bio, skills, and availability)
     if profile.bio and profile.skills.exists() and profile.availabilities.exists():
@@ -456,6 +573,126 @@ def complete_profile(request):
 #     return render(request, "tutor/complete_profile.html")# from django.shortcuts import render,redirect
 # =================================================================================
 # =================================================================================
+
+    return render(request, "tutor/complete_profile.html")
+
+
+from django.shortcuts import get_object_or_404
+
+# def tutor_public_profile(request, user_id):
+
+#     tutor = get_object_or_404(TutorProfile, user__id=user_id)
+
+#     return render(request, "tutor/tutor_public_profile.html", {
+#         "tutor": tutor
+#     })
+
+
+import matplotlib
+matplotlib.use("Agg")
+
+import matplotlib.pyplot as plt
+import io
+import base64
+from django.shortcuts import render, get_object_or_404
+from tutor.models import TutorProfile
+
+
+def tutor_public_profile(request, user_id):
+
+    tutor = get_object_or_404(TutorProfile, user__id=user_id)
+
+    # ================= GRAPH =================
+    labels = ["Rating"]
+    values = [tutor.rating]
+
+    plt.figure(figsize=(5,4))
+    plt.style.use("dark_background")
+
+    bars = plt.bar(labels, values)
+
+    # Neon cyan bar color
+    for bar in bars:
+        bar.set_color("#38bdf8")
+
+    plt.title("Overall Tutor Rating", color="white", fontsize=14)
+    plt.ylim(0, 5)
+    plt.grid(axis="y", alpha=0.2)
+
+    buffer = io.BytesIO()
+    plt.savefig(
+        buffer,
+        format="png",
+        bbox_inches="tight",
+        facecolor="#020617"
+    )
+    buffer.seek(0)
+
+    image_png = buffer.getvalue()
+    graph = base64.b64encode(image_png).decode("utf-8")
+
+    buffer.close()
+    plt.close()
+
+    return render(request, "tutor/tutor_public_profile.html", {
+        "tutor": tutor,
+        "rating_graph": graph
+    })
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+
+# ===============================
+# VIEW AVAILABLE SLOTS
+# ===============================
+@login_required
+def tutor_slots(request, tutor_id):
+
+    tutor = get_object_or_404(TutorProfile, id=tutor_id)
+
+    all_slots = tutor.availabilities.all()
+
+    booked_slot_ids = Booking.objects.filter(
+        tutor=tutor
+    ).values_list("availability_id", flat=True)
+
+    available_slots = all_slots.exclude(id__in=booked_slot_ids)
+
+    return render(request, "tutor/view_slots.html", {
+        "tutor": tutor,
+        "slots": available_slots
+    })
+
+
+# ===============================
+# BOOK SLOT
+# ===============================
+@login_required
+def book_slot(request, slot_id):
+
+    slot = get_object_or_404(Availability, id=slot_id)
+
+    already_booked = Booking.objects.filter(
+        availability=slot
+    ).exists()
+
+    if already_booked:
+        messages.error(request, "Slot already booked")
+        return redirect("tutor_slots", tutor_id=slot.tutor.id)
+
+    Booking.objects.create(
+        student=request.user,
+        tutor=slot.tutor,
+        availability=slot
+    )
+
+    messages.success(request, "Session booked successfully")
+
+    return redirect("tutor_slots", tutor_id=slot.tutor.id)
+
+
+# from django.shortcuts import render,redirect
 
 # from numpy import random
 # from django.core.mail import send_mail
