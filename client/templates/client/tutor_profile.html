@@ -1,35 +1,121 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'css/tutor_profile.css' %}">
 
+<!-- ================= NAVBAR ================= -->
+<nav class="top-navbar">
+
+    <div class="nav-left">
+        <div class="brand">
+            <img src="{% static 'images/logo.jpeg' %}" class="logo">
+            <span class="brand-name">SkillLink</span>
+        </div>
+    </div>
+
+    <div class="nav-right">
+
+        <!-- Search -->
+        <form method="GET" class="nav-search">
+            <input 
+                type="text" 
+                name="q"
+                placeholder="Search interns or skills..."
+                value="{{ search_query }}"
+            >
+
+            <input type="hidden" name="search_by" value="{{ search_by|default:'skill' }}">
+        </form>
+
+        <a href="{% url 'my_requests' %}" class="edit-btn">My Requests</a>
+        <a href="{% url 'complete-profile' %}" class="edit-btn">Edit Profile</a>
+
+        <!-- Avatar Menu -->
+        <div class="profile-menu">
+            <div class="avatar" onclick="toggleMenu()">
+                {{ request.user.username|first|upper }}
+            </div>
+
+            <div id="dropdown" class="dropdown">
+                <a href="{% url 'complete-profile' %}" class="dropdown-btn">My Profile</a>
+                <a href="{% url 'client-logout' %}" class="dropdown-btn logout-btn">Logout</a>
+            </div>
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= DASHBOARD LAYOUT ================= -->
+<div class="dashboard-shell">
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="branding-panel" id="sidebar">
+
+    <div>
+        <h1 class="brand-title">SkillLink</h1>
+        <p class="brand-tagline">Smart learning, beautifully simple</p>
+
+        <div class="brand-divider"></div>
+
+        <div class="brand-section">
+            <h4 class="brand-heading">Why clients choose us</h4>
+            <ul>
+                <li>✔ Verified tutors</li>
+                <li>◎ Distraction-free</li>
+                <li>◆ Clarity & confidence</li>
+            </ul>
+        </div>
+
+        <div class="brand-section">
+            <h4 class="brand-heading">Our promise</h4>
+            <p>We remove noise from learning decisions.</p>
+        </div>
+    </div>
+
+    <p class="brand-quote">
+        ❝ Learning, but make it effortless.
+    </p>
+
+    <div id="resizeHandle"></div>
+
+</aside>
+
+
+<!-- ================= MAIN CONTENT ================= -->
+<main class="dashboard-main">
+
 <div class="profile-container">
 
-```
-<!-- HERO -->
+<!-- ================= HERO ================= -->
 <div class="profile-hero">
 
     <div class="avatar">
-        {{ tutor.name|slice:":1" }}
+        {{ tutor.user.username|slice:":1"|upper }}
     </div>
 
     <div class="hero-info">
 
-        <h1>{{ tutor.name }}</h1>
+        <h1>
+            {{ tutor.user.get_full_name|default:tutor.user.username }}
+        </h1>
 
         <div class="rating">
-            ⭐ {{ tutor.rating }}
+            ⭐ {{ tutor.rating|default:"New" }}
         </div>
 
         <p class="bio">
-            {{ tutor.bio }}
+            {{ tutor.bio|default:"No bio provided yet." }}
         </p>
 
         <div class="skills">
-            {% for skill in tutor.skills %}
-                <span class="chip">{{ skill }}</span>
+            {% for skill in tutor.skills.all %}
+                <span class="chip">{{ skill.name }}</span>
+            {% empty %}
+                <span class="chip muted">No skills added</span>
             {% endfor %}
         </div>
 
@@ -38,75 +124,71 @@
 </div>
 
 
-
-<!-- GRID -->
+<!-- ================= GRID ================= -->
 <div class="profile-grid">
 
-    <!-- AVAILABILITY -->
-    <div class="card">
+<!-- AVAILABILITY -->
+<div class="card">
 
-        <h2>Availability</h2>
+    <h2>Availability</h2>
 
-        {% if tutor.availability %}
-            {% for slot in tutor.availability %}
-                <div class="slot">
-                    <strong>{{ slot.day }}</strong>
-                    <span>{{ slot.start }} – {{ slot.end }}</span>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p class="muted">No availability submitted.</p>
-        {% endif %}
+    {% if availability %}
+        {% for slot in availability %}
+            <div class="slot">
+                <strong>{{ slot.day_of_week }}</strong>
+                <span>{{ slot.start_time }} – {{ slot.end_time }}</span>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="muted">No availability submitted.</p>
+    {% endif %}
 
-    </div>
+</div>
 
 
+<!-- VERIFICATION -->
+<div class="card">
 
-    <!-- VERIFICATION -->
-    <div class="card">
+    <h2>Verification</h2>
 
-        <h2>Verification</h2>
+    {% if tutor.proof_of_skill %}
+        <a href="{{ tutor.proof_of_skill.url }}" target="_blank">
+            View Submitted Proof →
+        </a>
+    {% else %}
+        <p class="muted">Proof not uploaded.</p>
+    {% endif %}
 
-        {% if tutor.proof %}
-            <a href="{{ tutor.proof }}" target="_blank" class="link-btn">
-                View Submitted Proof →
+</div>
+
+
+<!-- LINKS -->
+<div class="card">
+
+    <h2>Professional Links</h2>
+
+    <div class="links">
+
+        {% if tutor.linkedin_profile %}
+            <a href="{{ tutor.linkedin_profile }}" target="_blank">
+                LinkedIn →
             </a>
-        {% else %}
-            <p class="muted">Proof not uploaded.</p>
         {% endif %}
 
-    </div>
-
-
-
-    <!-- LINKS -->
-    <div class="card">
-
-        <h2>Professional Links</h2>
-
-        <div class="links">
-
-            {% if tutor.linkedin %}
-                <a href="{{ tutor.linkedin }}" target="_blank">
-                    LinkedIn →
-                </a>
-            {% endif %}
-
-            {% if tutor.github %}
-                <a href="{{ tutor.github }}" target="_blank">
-                    GitHub →
-                </a>
-            {% endif %}
-
-        </div>
+        {% if tutor.github_profile %}
+            <a href="{{ tutor.github_profile }}" target="_blank">
+                GitHub →
+            </a>
+        {% endif %}
 
     </div>
 
 </div>
 
+</div>
 
 
-<!-- HIRE CTA -->
+<!-- ================= CTA ================= -->
 <div class="hire-section">
 
     <div>
@@ -117,12 +199,55 @@
     </div>
 
     <a href="{% url 'hire_tutor' tutor.id %}" class="view-btn">
-    Hire →
-</a>
+        Hire →
+    </a>
 
 </div>
 
-
 </div>
+</main>
+</div>
+
+
+<!-- ================= JS ================= -->
+<script>
+
+function toggleMenu(){
+    document.getElementById("dropdown").classList.toggle("show");
+}
+
+window.onclick = function(e){
+    if(!e.target.matches('.avatar')){
+        document.querySelectorAll(".dropdown")
+        .forEach(menu => menu.classList.remove("show"));
+    }
+}
+
+const sidebar = document.getElementById("sidebar");
+const handle = document.getElementById("resizeHandle");
+
+let isResizing = false;
+
+handle.addEventListener("mousedown", () => {
+    isResizing = true;
+});
+
+document.addEventListener("mousemove", (e) => {
+
+    if(!isResizing) return;
+
+    let newWidth = e.clientX;
+
+    if(newWidth < 180) newWidth = 180;
+    if(newWidth > 420) newWidth = 420;
+
+    sidebar.style.width = newWidth + "px";
+});
+
+document.addEventListener("mouseup", () => {
+    isResizing = false;
+});
+
+</script>
 
 {% endblock %}

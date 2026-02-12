@@ -31,8 +31,6 @@ class TutorProfile(models.Model):
     github_profile = models.URLField(max_length=255, blank=True, null=True)
     linkedin_profile = models.URLField(max_length=255, blank=True, null=True)
     rating = models.FloatField(default=0.0)
-    linkedin = models.URLField(blank=True, null=True)
-    github = models.URLField(blank=True, null=True)
 
 
     def __str__(self):

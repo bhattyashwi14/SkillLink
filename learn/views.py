@@ -192,18 +192,16 @@ def otp_generation():
     return otp
 
 
+from django.contrib.auth.decorators import login_required
+
+@login_required
 def dashboard(request):
 
-    email = request.session.get("email")
-
-    if not email:
+    if not request.user.is_authenticated:
         return redirect("learn_login")
 
-    # Safe user fetch
-    try:
-        user = User.objects.get(email=email)
-    except User.DoesNotExist:
-        return redirect("learn_login")
+    user = request.user
+
 
     # Ensure student profile exists
     profile, created = StudentProfile.objects.get_or_create(user=user)
@@ -387,15 +385,10 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def upcoming_sessions(request):
 
-    email = request.session.get("email")
-
-    if not email:
+    if not request.user.is_authenticated:
         return redirect("learn_login")
 
-    try:
-        user = User.objects.get(email=email)
-    except User.DoesNotExist:
-        return redirect("learn_login")
+    user = request.user
 
     bookings = Booking.objects.filter(
         student=user,

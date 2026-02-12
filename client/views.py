@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 import random
 
-from .models import ClientProfile, TutorProfile, JobApplication, JobPost
+from .models import ClientProfile
+from tutor.models import TutorProfile, Skill, Availability
 from django.db.models import Q
 
 
@@ -16,6 +17,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.db.models import Count
 from .mock_data import TUTORS 
+from tutor.models import Skill
+
 
 
 def client_login(request):
@@ -502,8 +505,9 @@ def client_dashboard(request):
 
         elif search_by == 'skill':
             tutors = tutors.filter(
-                skills__icontains=search_query
+                skills__name__icontains=search_query
             )
+
 
     # ---------- SKILL CARDS ----------
 #     skills = (
@@ -530,7 +534,7 @@ def client_dashboard(request):
 # ]
     # ---------- SKILL SOURCE SWITCH ----------
 
-    USE_FAKE_DATA = True   # ⭐ CHANGE THIS TO FALSE WHEN TUTOR APP ARRIVES
+    USE_FAKE_DATA = False  # ⭐ CHANGE THIS TO FALSE WHEN TUTOR APP ARRIVES
     if USE_FAKE_DATA:
         skills = [
         {"skills": "Python", "total": 12},
@@ -548,20 +552,18 @@ def client_dashboard(request):
         ]
             
     else:
-        skills = (
-        TutorProfile.objects
-        .values('skills')
-        .annotate(total=Count('id'))
-    )
+        from tutor.models import Skill
 
+        skills = (
+            Skill.objects
+            .annotate(total=Count("tutorprofile", distinct=True))
+            .filter(total__gt=0)
+        )
 
     skills = [
-        {"name": skill["skills"], "total": skill["total"]}
-        for skill in skills if skill["skills"]
+    {"name": skill.name, "total": skill.total}
+    for skill in skills
     ]
-
-
-
 
     # ---------- CONTEXT ----------
     context = {
@@ -701,7 +703,7 @@ def complete_client_profile(request):
 
 def skill_detail(request, skill_name):
 
-    USE_FAKE_DATA = True
+    USE_FAKE_DATA = False
     search_query = request.GET.get("search", "")
 
     if USE_FAKE_DATA:
@@ -736,8 +738,9 @@ def skill_detail(request, skill_name):
     else:
 
         interns = TutorProfile.objects.filter(
-            skills__icontains=skill_name
-        )
+            skills__name__icontains=skill_name
+        ).distinct()
+
 
         if search_query:
             interns = interns.filter(
@@ -764,7 +767,7 @@ def skill_detail(request, skill_name):
 
 def tutor_profile(request, id):
 
-    USE_FAKE_DATA = True
+    USE_FAKE_DATA = False
 
     if USE_FAKE_DATA:
 
@@ -774,36 +777,35 @@ def tutor_profile(request, id):
         )
 
     else:
+        tutor_obj = TutorProfile.objects.select_related("user").get(id=id)
 
-        tutor_obj = TutorProfile.objects.get(id=id)
-
-        availability = Availability.objects.filter(
-            tutor=tutor_obj
-        )
-
+        availability = tutor_obj.availabilities.all()
+        
         tutor = {
-
-            "id": tutor_obj.id,
-            "name": tutor_obj.user.get_full_name(),
-            "bio": tutor_obj.bio,
-            "skills": tutor_obj.skills.all(),
-            "rating": tutor_obj.rating,
-
-            "linkedin": tutor_obj.linkedin,
-            "github": tutor_obj.github,
-
-            "proof": tutor_obj.proof.url,
-
-            "availability": availability,
-        }
-
+                "id": tutor_obj.id,
+                "name": (
+                    tutor_obj.user.get_full_name()
+                    or tutor_obj.user.first_name
+                    or tutor_obj.user.username
+                ),
+                "bio": tutor_obj.bio or "",
+                "skills": tutor_obj.skills.all(),
+                "rating": tutor_obj.rating or 0,
+                "linkedin": tutor_obj.linkedin or "",
+                "github": tutor_obj.github or "",
+                "availability": availability,
+            }
+        return render(request, "client/tutor_profile.html", {
+                "tutor": tutor_obj,
+                "availability": availability
+            })
     return render(request,"client/tutor_profile.html", {
         "tutor": tutor
     })
 
 
 
-from .models import HiringRequest, TutorProfile
+from .models import HiringRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 

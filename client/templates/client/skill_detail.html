@@ -1056,12 +1056,12 @@ body{
                 <div class="intern-left">
 
                     <div class="intern-avatar">
-                        {{ intern.name|slice:":1" }}
+                        {{ intern.user.username|slice:":1"|upper }}
                     </div>
 
                     <div class="intern-meta">
 
-                        <h3>{{ intern.name }}</h3>
+                        <h3>{{ intern.user.get_full_name|default:intern.user.username }}</h3>
 
                         <div class="intern-tags">
 
@@ -1117,4 +1117,3 @@ body{
 </div>
 
 </body>
-

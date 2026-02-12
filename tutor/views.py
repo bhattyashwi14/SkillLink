@@ -425,8 +425,9 @@ def complete_profile(request):
         # ===== BASIC INFO =====
         full_name = request.POST.get("full_name")
         profile.bio = request.POST.get("bio")
-        profile.linkedin = request.POST.get("linkedin")
-        profile.github = request.POST.get("github")
+        profile.linkedin_profile = request.POST.get("linkedin")
+        profile.github_profile = request.POST.get("github")
+
 
         # ⭐⭐⭐ FIX — SAVE TEACHING SKILLS ⭐⭐⭐
         profile.teaching_skills = request.POST.get("tutoring_skills")
