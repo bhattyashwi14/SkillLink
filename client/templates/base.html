@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Client Dashboard{% endblock %}</title>
+
+    <!-- SAME CSS FILES -->
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+
+    <!-- SAME FONTS -->
+    <link rel="stylesheet" href="{% static 'fonts/inter.css' %}">
+</head>
+
+<body>
+    <!-- Navbar -->
+    {% comment %} {% include 'includes/navbar.html' %} {% endcomment %}
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        {% comment %} {% include 'includes/sidebar.html' %} {% endcomment %}
+
+        <!-- Page Content -->
+        <div class="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- SAME JS -->
+    <script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+</html>

@@ -32,13 +32,16 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'core',
+    'client',
+    'learn',
+    'tutor.apps.TutorConfig',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tutor.apps.TutorConfig',
 ]
 
 MIDDLEWARE = [
@@ -55,9 +58,8 @@ ROOT_URLCONF = 'skilllink.urls'
 
 TEMPLATES = [
     {
-        'DIRS': [BASE_DIR / 'core' / 'templates'],
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'core' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

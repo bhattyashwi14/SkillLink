@@ -1,0 +1,205 @@
+{% comment %} {% extends 'base.html' %}
+
+{% block title %}Client Signup{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <h2>Create Client Account</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password1" placeholder="Password" required>
+    <input type="password" name="password2" placeholder="Confirm Password" required>
+
+    <label style="margin-top:10px;">Upload certificates / project</label>
+    <input type="file" name="work_proof" required>
+
+    <button class="neon-btn" type="submit">Create Account</button>
+</form>
+
+    <p style="margin-top:15px; text-align:center;">
+        Already registered?
+        <a href="{% url 'client-login' %}">Login</a>
+    </p>
+</div>
+{% endblock %} {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillLink | Create Account</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .label-accent {
+            color: #7dd3fc;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .input-field::placeholder {
+            color: #9ca3af;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+
+<body class="bg-dark text-white d-flex align-items-center justify-content-center min-vh-100">
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+
+            <div class="card bg-dark border border-secondary rounded-5 shadow-lg p-5">
+                
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <h2 class="text-gradient fw-bold mb-2">Create your SkillLink account</h2>
+                    <p class="text-muted mb-1">
+                        Start learning, building skills, and unlocking opportunities
+                    </p>
+                    <small class="text-muted">
+                        This will take less than a minute
+                    </small>
+                </div>
+
+                <!-- FORM -->
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <!-- EMAIL STEP -->
+                    <div class="mb-4">
+                        <label class="label-accent mb-1 d-block">Email address</label>
+
+                        <input type="email" name="email"
+                            value="{{ email|default:'' }}"
+                            class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field"
+                            placeholder="Enter your email"
+                            required>
+
+                        {% if email_error %}
+                        <small class="text-danger">{{ email_error }}</small>
+                        {% endif %}
+
+                        {% if not show_otp and not show_password %}
+                        <button type="submit" name="action" value="send_otp"
+                            class="btn btn-info w-100 mt-3 rounded-pill">
+                            Send OTP
+                        </button>
+                        {% endif %}
+                    </div>
+
+
+                    <!-- OTP STEP -->
+                    {% if show_otp %}
+                    <div class="mb-4">
+                        <label class="label-accent mb-1 d-block">Enter OTP</label>
+
+                        <input type="text" name="otp"
+                            class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field"
+                            placeholder="Enter 6 digit OTP"
+                            value="{{ otp|default:'' }}"
+                            required>
+
+                        {% if otp_error %}
+                        <small class="text-danger">{{ otp_error }}</small>
+                        {% endif %}
+                        {% if otp_success %}
+                        <small class="text-success mt-1 d-block">
+                            {{ otp_success }}
+                        </small>
+                        {% endif %}
+
+
+                        {% if not show_password %}
+                        <button type="submit" name="action" value="verify_otp"
+                            class="btn btn-info w-100 mt-3 rounded-pill">
+                            Verify OTP
+                        </button>
+
+                        <button type="submit" name="action" value="resend_otp"
+                            class="btn btn-link text-info w-100">
+                            Resend OTP
+                        </button>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+
+                    <!-- PASSWORD STEP -->
+                    {% if show_password %}
+                    <div class="mb-4">
+                        <label class="label-accent mb-1 d-block">Create Passcode</label>
+
+                        <input type="password" name="password"
+                            class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field"
+                            placeholder="Min 8 chars, 1 capital, 1 number, 1 special"
+                            required>
+
+                        {% if pass_error %}
+                        <small class="text-danger">{{ pass_error }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="label-accent mb-1 d-block">Confirm Passcode</label>
+
+                        <input type="password" name="confirm_password"
+                            class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field"
+                            placeholder="Re-enter passcode"
+                            required>
+                        {% if match_error %}
+                        <small class="text-danger">{{ match_error }}</small>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" name="action" value="create_account"
+                        class="btn btn-primary w-100 rounded-pill">
+                        Create Account
+                    </button>
+                    {% endif %}
+
+
+                    {% if success %}
+                    <div class="alert alert-success mt-3">
+                        {{ success }}
+                    </div>
+                    {% endif %}
+                </form>
+
+
+                <!-- Footer -->
+                <div class="text-center mt-4">
+                    <p class="text-secondary mb-1" style="font-size: 0.95rem;">
+                        Already have an account?
+                    </p>
+                    <a href="{% url 'client-login' %}" 
+                        class="fw-semibold text-info text-decoration-none"
+                        style="font-size: 0.95rem;">
+                            Log in
+                    </a>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

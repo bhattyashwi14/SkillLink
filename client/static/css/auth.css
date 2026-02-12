@@ -1,0 +1,71 @@
+/* ---------- GLOBAL ---------- */
+body {
+    background: radial-gradient(circle at top, #0f2027, #000000);
+    font-family: 'Inter', sans-serif;
+    color: #ffffff;
+}
+
+/* ---------- AUTH CARD ---------- */
+.auth-container {
+    max-width: 420px;
+    margin: 80px auto;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(14px);
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.15);
+    border: 1px solid rgba(0, 255, 255, 0.25);
+}
+
+/* ---------- HEADINGS ---------- */
+.auth-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* ---------- INPUTS ---------- */
+.auth-container input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.auth-container input::placeholder {
+    color: #aaa;
+}
+
+/* ---------- NEON BUTTON ---------- */
+.neon-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 30px;
+    background: linear-gradient(90deg, #00f0ff, #7b61ff);
+    border: none;
+    color: #000;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.7);
+    transition: all 0.3s ease;
+}
+
+.neon-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 35px rgba(123, 97, 255, 1);
+}
+
+/* ---------- LINKS ---------- */
+.auth-container a {
+    color: #00f0ff;
+    text-decoration: none;
+}
+
+.auth-container a:hover {
+    text-decoration: underline;
+}

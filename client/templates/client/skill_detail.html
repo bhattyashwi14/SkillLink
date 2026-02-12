@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Complete Company Profile</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+
+<style>
+
+:root{
+
+    --bg-main:#0B1020;
+    --bg-surface:#12182B;
+    --bg-card:#171E33;
+
+    --border-soft:rgba(255,255,255,0.06);
+
+    --text-primary:#E6EAF2;
+    --text-secondary:#9AA4B2;
+
+    --accent:#5B8CFF;
+
+}
+
+
+    /* for skill_detail */
+.intern-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    gap:32px;
+    margin-top:40px;
+}
+.intern-card{
+    background:rgba(255,255,255,0.03);
+    border-radius:20px;
+    padding:30px;
+    text-align:center;
+    backdrop-filter:blur(12px);
+    transition:.35s;
+}
+
+.intern-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 20px 50px rgba(0,0,0,.6);
+}
+.intern-avatar{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#00c6ff,#0072ff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    font-weight:700;
+    margin:auto;
+    margin-bottom:15px;
+}
+.rating{
+    margin-top:10px;
+    font-weight:600;
+    color:#FFD700;
+}
+
+
+
+
+
+
+{% comment %} /* PAGE WRAPPER */ {% endcomment %}
+
+.skill-wrapper{
+    padding:40px;
+}
+{% comment %} 
+/* TITLE */ {% endcomment %}
+
+.section-title{
+    font-size:28px;
+    font-weight:600;
+    color:white;
+    margin-bottom:30px;
+}
+
+
+{% comment %} /* GRID */ {% endcomment %}
+
+.intern-grid{
+
+    {% comment %} display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+     gap:32px;
+    margin-top:45px; {% endcomment %}
+
+    margin-top:55px;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:22px;
+}
+
+
+{% comment %} /* CARD */ {% endcomment %}
+
+.intern-card{
+    {% comment %} background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(14px);
+    border-radius:18px;
+    padding:30px;
+    text-align:center;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    transition: all .35s ease;
+
+
+
+    background: rgba(30,34,52,0.6); {% endcomment %}
+     {% comment %} padding:34px;
+
+    background:linear-gradient(
+        145deg,
+        rgba(28,36,64,0.6),
+        rgba(20,26,46,0.6)
+    );
+
+    border-radius:16px;
+
+    border:1px solid var(--border-soft);
+
+    position:relative;
+    overflow:hidden;
+
+    transition:all .28s cubic-bezier(.4,0,.2,1); {% endcomment %}
+
+
+     width:100%;
+    padding:28px 34px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    background:linear-gradient(
+        145deg,
+        rgba(28,36,64,0.6),
+        rgba(20,26,46,0.6)
+    );
+
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,0.06);
+
+    transition:all .25s cubic-bezier(.4,0,.2,1);
+}
+
+
+{% comment %} /* 🔥 GLOW + LIFT */ {% endcomment %}
+
+.intern-card:hover{
+    {% comment %} transform: translateY(-12px) scale(1.02);
+
+    border:1px solid rgba(0,200,255,.6);
+
+    box-shadow:
+        0 10px 30px rgba(0,200,255,.15),
+        0 0 18px rgba(0,200,255,.25);
+
+
+
+
+     
+    transform: translateY(-6px);
+
+    border:1px solid rgba(90,140,255,0.35);
+
+    box-shadow:0 18px 40px rgba(0,0,0,0.45); {% endcomment %}
+    transform:translateY(-8px);
+
+    border:1px solid rgba(91,140,255,.35);
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.55);
+
+}
+
+
+{% comment %} Avatars {% endcomment %}
+
+.intern-avatar{
+    width:78px;
+    height:78px;
+    border-radius:50%;
+
+    margin:auto;
+    margin-bottom:14px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:28px;
+    font-weight:600;
+
+    color:white;
+
+    background:linear-gradient(135deg,#00c6ff,#0072ff);
+
+    box-shadow:0 4px 14px rgba(0,150,255,.35);
+
+
+
+
+
+     width:64px;
+    height:64px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-weight:600;
+    font-size:20px;
+
+    background: linear-gradient(135deg,#5B8CFF,#7A5CFF);
+
+    margin-bottom:18px;
+
+
+
+     width:70px;
+    height:70px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-weight:600;
+    font-size:22px;
+
+    background:linear-gradient(135deg,#5B8CFF,#7A5CFF);
+
+    margin-bottom:20px;
+}
+
+{% comment %} Name {% endcomment %}
+
+.intern-card h3{
+    color:white;
+    margin-top:8px;
+    margin-bottom:6px;
+    font-weight:600;
+
+    font-size:20px;
+    font-weight:600;
+    color:#E6EAF2;
+
+
+    font-size:21px;
+    font-weight:600;
+ color:var(--text-primary);
+}
+
+
+{% comment %} Stars {% endcomment %}
+
+.rating{
+    color:#FFD700;
+    font-size:18px;
+    letter-spacing:2px;
+
+    margin-top:10px;
+
+    font-weight:600;
+
+    color:#FFD166;
+}
+
+
+
+
+.skill-page{
+    {% comment %} max-width:1200px;
+    margin:auto;
+    padding:60px 20px; {% endcomment %}
+    width:100%;
+    max-width:1600px;
+    margin:auto;
+    padding:60px 80px;
+}
+.skill-container{
+  width:100%;
+    max-width:1500px;
+
+    margin:70px auto;
+    padding:70px;
+
+    background:rgba(18,24,43,0.75);
+    backdrop-filter:blur(20px);
+
+    border-radius:20px;
+
+    border:1px solid var(--border-soft);
+
+    min-height:80vh;
+}
+.skill-container:hover{
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+.section-title{
+    font-size:30px;
+    font-weight:650;
+    color:white;
+
+    margin-bottom:6px;
+}
+.section-subtitle{
+    color:rgba(255,255,255,.6);
+    margin-bottom:30px;
+    font-size:15px;
+}
+.skill-header h1{
+
+    font-size:38px;
+    font-weight:600;
+
+    letter-spacing:-0.6px;
+
+    color:var(--text-primary);
+}
+
+.skill-header p{
+   
+      margin-top:10px;
+
+    color:var(--text-secondary);
+
+    font-size:16px;
+}
+.rating{
+    margin-top:8px;
+
+    color:#F4C430;
+    font-weight:600;
+}
+body{
+    background: radial-gradient(
+        circle at top,
+        #0F1424,
+        #070B16 70%
+    );
+}
+body{
+    background:
+    radial-gradient(circle at 20% 10%, #16213E, transparent 40%),
+    radial-gradient(circle at 80% 0%, #1B2A4A, transparent 40%),
+    var(--bg-main);
+
+    font-family:'Inter',sans-serif;
+}
+
+.intern-left{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+.intern-card:hover{
+
+    transform:translateY(-4px);
+
+    border:1px solid rgba(91,140,255,.35);
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,.45);
+}
+
+.intern-card{
+
+    width:100%;
+    padding:26px 34px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    border-radius:18px;
+
+    background:linear-gradient(
+        145deg,
+        rgba(25,35,60,.65),
+        rgba(18,25,45,.65)
+    );
+
+    backdrop-filter: blur(14px);
+
+    border:1px solid rgba(255,255,255,.05);
+
+    transition:all .28s cubic-bezier(.4,0,.2,1);
+
+    position:relative;
+}
+.intern-card:hover{
+
+    transform:translateY(-6px);
+
+    border:1px solid rgba(90,140,255,.35);
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.55);
+
+}
+.intern-left{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.intern-meta h3{
+    font-size:20px;
+    font-weight:600;
+}
+.intern-avatar{
+
+    width:58px;
+    height:58px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-weight:600;
+    font-size:20px;
+
+    color:white;
+
+    background:linear-gradient(
+        135deg,
+        #5B8CFF,
+        #7C4DFF
+    );
+
+    box-shadow:
+        0 6px 18px rgba(91,140,255,.45);
+}
+.intern-tags{
+    display:flex;
+    gap:8px;
+    margin-top:6px;
+}
+
+.tag{
+
+    padding:4px 10px;
+    border-radius:999px;
+
+    font-size:12px;
+    font-weight:500;
+
+    background:rgba(91,140,255,.12);
+    color:#8FB3FF;
+}
+
+.tag.muted{
+    background:rgba(255,255,255,.06);
+    color:#9AA4B2;
+}
+.intern-right{
+    display:flex;
+    align-items:center;
+    gap:22px;
+}
+.rating{
+
+    font-weight:600;
+    color:#FFD76A;
+
+    font-size:16px;
+}
+.view-btn{
+
+    padding:10px 18px;
+
+    border-radius:10px;
+    border:none;
+
+    font-weight:600;
+    font-size:14px;
+
+    background:linear-gradient(
+        135deg,
+        #5B8CFF,
+        #6E5BFF
+    );
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.view-btn:hover{
+    transform:translateY(-2px);
+}
+.view-btn{
+
+    padding:10px 18px;
+
+    border-radius:10px;
+    border:none;
+
+    font-weight:600;
+    font-size:14px;
+
+    background:linear-gradient(
+        135deg,
+        #5B8CFF,
+        #6E5BFF
+    );
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.view-btn:hover{
+    transform:translateY(-2px);
+}
+.view-btn{
+
+    padding:10px 18px;
+
+    border-radius:10px;
+    border:none;
+
+    font-weight:600;
+    font-size:14px;
+
+    background:linear-gradient(
+        135deg,
+        #5B8CFF,
+        #6E5BFF
+    );
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.view-btn:hover{
+    transform:translateY(-2px);
+}
+.intern-wrapper{
+
+    max-width:1200px;
+    margin:auto;
+
+    padding:60px 40px;
+
+    border-radius:26px;
+
+    background:linear-gradient(
+        145deg,
+        rgba(18,25,45,.85),
+        rgba(10,14,30,.85)
+    );
+
+    box-shadow:
+        0 40px 120px rgba(0,0,0,.6);
+}
+
+.talent-bar{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:26px 32px;
+    margin-bottom:40px;
+
+    border-radius:18px;
+
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(12px);
+
+    border:1px solid rgba(255,255,255,0.06);
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,0.45);
+}
+
+/* LEFT */
+
+.talent-left h1{
+
+    font-size:28px;
+    font-weight:650;
+    letter-spacing:-0.5px;
+}
+
+.talent-count{
+
+    margin-left:14px;
+    font-size:14px;
+    color:#8b9bb4;
+}
+
+/* RIGHT */
+
+.talent-actions{
+    display:flex;
+    gap:14px;
+}
+
+/* Search */
+
+.talent-search{
+
+    background: rgba(255,255,255,0.05);
+    border:none;
+
+    padding:10px 16px;
+    border-radius:10px;
+
+    color:white;
+    width:220px;
+}
+
+.talent-search:focus{
+    outline:none;
+}
+
+/* Sort Button */
+
+.sort-btn{
+
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #4f46e5
+    );
+
+    border:none;
+    color:white;
+
+    padding:10px 18px;
+    border-radius:10px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.sort-btn:hover{
+    transform:translateY(-2px);
+}
+.talent-hero{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:28px;
+    padding:18px 6px;
+}
+
+/* LEFT SIDE */
+
+.skill-pill{
+
+    display:inline-block;
+
+    padding:6px 14px;
+    border-radius:999px;
+
+    background:linear-gradient(
+        135deg,
+        #2563eb,
+        #7c3aed
+    );
+
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:1px;
+
+    margin-bottom:10px;
+}
+
+.hero-left h1{
+
+    font-size:34px;
+    font-weight:700;
+    letter-spacing:-1px;
+}
+
+/* RIGHT STAT */
+
+.talent-stat{
+
+    font-size:28px;
+    font-weight:700;
+}
+
+.talent-stat span{
+
+    display:block;
+    font-size:13px;
+    color:#94a3b8;
+    font-weight:500;
+}
+.talent-hero{
+    border-bottom:1px solid rgba(255,255,255,0.06);
+    padding-bottom:22px;
+}
+.talent-hero{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:26px 32px;
+    margin-bottom:40px;
+
+    border-radius:18px;
+
+    background:linear-gradient(
+        135deg,
+        rgba(37,99,235,0.18),
+        rgba(124,58,237,0.12)
+    );
+
+    border:1px solid rgba(255,255,255,0.06);
+
+    backdrop-filter: blur(12px);
+}
+.hero-main h1{
+
+    font-size:30px;
+    font-weight:700;
+    letter-spacing:-0.5px;
+}
+
+.hero-main p{
+
+    margin-top:6px;
+    color:#94a3b8;
+    font-size:14px;
+}
+.skill-badge{
+
+    display:inline-block;
+
+    padding:6px 12px;
+    margin-bottom:10px;
+
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1px;
+
+    border-radius:999px;
+
+    background:linear-gradient(
+        135deg,
+        #2563eb,
+        #7c3aed
+    );
+}
+.hero-search input{
+
+    width:260px;
+    padding:12px 16px;
+
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.08);
+
+    background:rgba(255,255,255,0.04);
+    color:white;
+
+    outline:none;
+
+    transition:.25s;
+}
+
+.hero-search input:focus{
+
+    border-color:#2563eb;
+    box-shadow:0 0 0 2px rgba(37,99,235,0.25);
+}
+.search-alert{
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding:14px 18px;
+    margin-bottom:22px;
+
+    border-radius:12px;
+
+    background:rgba(255, 184, 0, 0.08);
+
+    border:1px solid rgba(255, 184, 0, 0.25);
+
+    color:#ffd166;
+
+    font-weight:500;
+}
+
+.alert-icon{
+    font-size:18px;
+}
+.intern-card::before{
+    position:absolute;
+    inset:0;
+    border-radius:18px;
+    background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,.06),
+        transparent
+    );
+    opacity:0;
+    transition:.3s;
+
+    pointer-events: none;  
+}
+.view-profile-btn{
+    padding:10px 18px;
+    border-radius:12px;
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
+    color:#d6e2ff;
+    font-weight:600;
+    text-decoration:none;
+    transition:.25s;
+}
+
+.view-profile-btn:hover{
+    background: rgba(90,140,255,.18);
+    border:1px solid rgba(90,140,255,.4);
+}
+
+
+</style>
+</head>
+<body>
+    {% comment %} <div class="dashboard-card">
+
+    <h2 class="section-title">
+        ⭐ Top Interns for {{ skill_name }}
+    </h2>
+
+    <div class="intern-grid">
+
+        {% for intern in interns %}
+
+        <div class="intern-card">
+
+            <div class="intern-avatar">
+                {{ intern.name|slice:":1" }}
+            </div>
+
+            <h3>{{ intern.name }}</h3>
+
+            <div class="rating">
+                ⭐ {{ intern.rating }}
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="no-results">
+            No interns available for this skill yet 🚀
+        </div>
+
+        {% endfor %}
+
+    </div> {% endcomment %}
+
+{% comment %} </div> {% endcomment %}
+{% comment %} <div class="skill-page">
+
+    <div class="skill-container">
+
+        <h2 class="section-title">
+            Top Interns · {{ skill_name }}
+        </h2>
+
+        <div class="section-subtitle">
+            Discover highly rated candidates ready to contribute.
+        </div>
+
+
+        <div class="intern-grid">
+
+            {% for intern in interns %}
+
+           <div class="intern-card">
+
+    <div class="intern-left">
+
+        <div class="intern-avatar">
+            {{ intern.name|slice:":1" }}
+        </div>
+
+        <div>
+            <h3>{{ intern.name }}</h3>
+            <p class="intern-role">UI/UX Intern</p>
+        </div>
+
+    </div>
+
+    <div class="rating">
+        ⭐ {{ intern.rating }}
+    </div>
+
+</div>
+
+
+            {% empty %}
+
+            <div class="no-results">
+                No interns available for this skill yet 🚀
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div> {% endcomment %}
+
+
+
+<div class="intern-page">
+
+    <!-- Top Container -->
+    <div class="intern-container">
+
+        <!-- Header -->
+       <div class="talent-hero">
+
+    <div class="hero-main">
+
+        <div class="skill-badge">
+            {{ skill_name|upper }}
+        </div>
+
+        <h1>Ready to Hire</h1>
+
+        <p>{{ interns|length }} verified candidates ready to contribute.</p>
+
+    </div>
+
+
+    <div class="hero-search">
+
+       <form method="GET">
+
+    <input 
+        type="text"
+        name="search"
+        placeholder="Search candidates..."
+        value="{{ search_query }}"
+    >
+
+</form>
+
+
+    </div>
+
+</div>
+
+
+
+        {% comment %} <div class="talent-bar">
+
+    <div class="talent-left">
+
+        <h1>
+            {{ skill_name|title }} Talent
+        </h1>
+
+        <span class="talent-count">
+            {{ interns|length }} candidates
+        </span>
+
+    </div>
+
+
+    <div class="talent-actions">
+
+        <input 
+            class="talent-search"
+            placeholder="Search candidates..."
+        >
+
+        {% comment %} <button class="sort-btn">
+            ⭐ Sort by Rating
+        </button> {% endcomment %}
+
+    {% comment %} </div>
+
+</div> {% endcomment %}
+
+
+{% if no_results %}
+
+<div class="search-alert">
+
+    <span class="alert-icon">🔎</span>
+
+    No candidates found for 
+    <strong>"{{ search_query }}"</strong>.
+    
+    Try a different name.
+
+</div>
+
+{% endif %}
+
+
+        <!-- Intern List -->
+        <div class="intern-list">
+
+            {% for intern in interns %}
+
+            <div class="intern-card">
+
+                <!-- LEFT -->
+                <div class="intern-left">
+
+                    <div class="intern-avatar">
+                        {{ intern.name|slice:":1" }}
+                    </div>
+
+                    <div class="intern-meta">
+
+                        <h3>{{ intern.name }}</h3>
+
+                        <div class="intern-tags">
+
+                            <!-- ✅ UNIVERSAL SKILL -->
+                            <span class="tag primary">
+                                {{ skill_name|title }}
+                            </span>
+
+                            <!-- ✅ Availability -->
+                            {% if intern.available %}
+                                <span class="tag success">
+                                    Available
+                                </span>
+                            {% else %}
+                                <span class="tag muted">
+                                    Busy
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RIGHT -->
+               <div class="intern-right">
+
+    <div class="rating">
+        ⭐ {{ intern.rating }}
+    </div>
+
+  <a href="{% url 'tutor_profile' intern.id %}" class="view-profile-btn">
+    View Profile →
+</a>
+</div>
+            </div>
+
+            {% empty %}
+
+            {% comment %} <!-- No interns -->
+            <div class="no-interns">
+                No interns available for this skill yet 🚀
+            </div> {% endcomment %}
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+

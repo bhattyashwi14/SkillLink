@@ -1,0 +1,25 @@
+<form method="POST" action="{% url 'login_send_otp' %}">
+  {% csrf_token %}
+
+  {% if not otp_sent %}
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Password" required>
+
+    <button type="submit">Send OTP</button>
+  {% endif %}
+</form>
+{% if otp_sent %}
+<form method="POST" action="{% url 'verify_login_otp' %}">
+  {% csrf_token %}
+
+  <input type="hidden" name="email" value="{{ email }}">
+
+  <input type="text" name="otp" placeholder="Enter OTP" required>
+
+  <button type="submit">Verify OTP</button>
+</form>
+{% endif %}
+
+
+
+

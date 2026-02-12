@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+/* PAGE WRAPPER */
+.hire-wrapper{
+    max-width:1100px;
+    margin:auto;
+    padding:60px 20px;
+}
+
+/* CARD */
+.hire-card{
+    display:grid;
+    grid-template-columns:320px 1fr;
+    gap:40px;
+
+    padding:40px;
+
+    border-radius:20px;
+
+    background:linear-gradient(
+        145deg,
+        rgba(90,140,255,.12),
+        rgba(123,97,255,.08)
+    );
+
+    border:1px solid rgba(255,255,255,.08);
+}
+
+/* LEFT SIDE */
+.hire-left{
+    text-align:center;
+}
+
+.avatar{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    text-transform:uppercase;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+
+    font-size:38px;
+    font-weight:700;
+    color:white;
+
+    margin:auto;
+    margin-bottom:14px;
+
+    background:linear-gradient(
+        135deg,
+        #5a8cff,
+        #7b61ff
+    );
+}
+
+.skill{
+    opacity:.75;
+    margin:8px 0;
+}
+
+.rating{
+    color:#ffd76a;
+    font-weight:600;
+}
+
+/* RIGHT SIDE */
+.hire-right h1{
+    margin-bottom:6px;
+}
+
+.subtitle{
+    opacity:.7;
+    margin-bottom:24px;
+}
+
+form{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+label{
+    font-size:14px;
+    opacity:.85;
+}
+
+input,
+select,
+textarea{
+    padding:12px;
+    border-radius:10px;
+
+    border:1px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.03);
+    color:white;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    outline:none;
+    border-color:#7b61ff;
+}
+
+/* BUTTON */
+.hire-submit{
+    margin-top:10px;
+    padding:16px;
+
+    border:none;
+    border-radius:12px;
+
+    font-weight:600;
+    color:white;
+
+    cursor:pointer;
+
+    background:linear-gradient(
+        135deg,
+        #5a8cff,
+        #7b61ff
+    );
+
+    transition:.25s;
+}
+
+.hire-submit:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 25px rgba(90,140,255,.4);
+}
+
+/* MOBILE */
+@media(max-width:900px){
+
+.hire-card{
+    grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+
+<div class="hire-wrapper">
+
+    <div class="hire-card">
+
+        <!-- Tutor Preview -->
+        <div class="hire-left">
+
+
+            <div class="avatar">
+                    {% if tutor.profile_image %}
+                             <img src="{{ tutor.profile_image.url }}" alt="">
+                    {% else %}
+                          {{ tutor.user.get_full_name|first|upper }}
+                     {% endif %}
+</div>
+
+
+            {% comment %} <div class="avatar">
+                {{ tutor.user.first_name|slice:":1" }}
+            </div> {% endcomment %}
+
+            <h2>{{ tutor.user.get_full_name }}</h2>
+
+            <p class="skill">
+                {{ tutor.skills.all|join:", " }}
+            </p>
+
+            <div class="rating">
+                ⭐ {{ tutor.rating }}
+            </div>
+
+        </div>
+
+
+        <!-- FORM -->
+        <div class="hire-right">
+
+            <h1>Send Hiring Request</h1>
+            <p class="subtitle">
+                Fill the details so the tutor understands your requirement.
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <label>Skill Required</label>
+                <input name="skill" placeholder="Python, UI/UX, Java..." required>
+
+                <label>Budget</label>
+                <input name="budget" type="number" placeholder="₹ 5000" required>
+
+                <label>Expected Duration</label>
+                <input name="duration" placeholder="Eg: 3 months">
+
+                <label>Mode</label>
+                <select name="mode" required>
+                    <option value="">Select Mode</option>
+                    <option>Online</option>
+                    <option>Offline</option>
+                </select>
+
+                <label>Description</label>
+                <textarea
+                    name="description"
+                    rows="4"
+                    placeholder="Explain your project / learning goals..."
+                    required
+                ></textarea>
+
+                <button class="hire-submit">
+                    Send Request 🚀
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

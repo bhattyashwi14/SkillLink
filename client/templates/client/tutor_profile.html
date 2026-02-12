@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/tutor_profile.css' %}">
+
+<div class="profile-container">
+
+```
+<!-- HERO -->
+<div class="profile-hero">
+
+    <div class="avatar">
+        {{ tutor.name|slice:":1" }}
+    </div>
+
+    <div class="hero-info">
+
+        <h1>{{ tutor.name }}</h1>
+
+        <div class="rating">
+            ⭐ {{ tutor.rating }}
+        </div>
+
+        <p class="bio">
+            {{ tutor.bio }}
+        </p>
+
+        <div class="skills">
+            {% for skill in tutor.skills %}
+                <span class="chip">{{ skill }}</span>
+            {% endfor %}
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- GRID -->
+<div class="profile-grid">
+
+    <!-- AVAILABILITY -->
+    <div class="card">
+
+        <h2>Availability</h2>
+
+        {% if tutor.availability %}
+            {% for slot in tutor.availability %}
+                <div class="slot">
+                    <strong>{{ slot.day }}</strong>
+                    <span>{{ slot.start }} – {{ slot.end }}</span>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="muted">No availability submitted.</p>
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- VERIFICATION -->
+    <div class="card">
+
+        <h2>Verification</h2>
+
+        {% if tutor.proof %}
+            <a href="{{ tutor.proof }}" target="_blank" class="link-btn">
+                View Submitted Proof →
+            </a>
+        {% else %}
+            <p class="muted">Proof not uploaded.</p>
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- LINKS -->
+    <div class="card">
+
+        <h2>Professional Links</h2>
+
+        <div class="links">
+
+            {% if tutor.linkedin %}
+                <a href="{{ tutor.linkedin }}" target="_blank">
+                    LinkedIn →
+                </a>
+            {% endif %}
+
+            {% if tutor.github %}
+                <a href="{{ tutor.github }}" target="_blank">
+                    GitHub →
+                </a>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- HIRE CTA -->
+<div class="hire-section">
+
+    <div>
+        <h2>Interested in this candidate?</h2>
+        <p class="muted">
+            Move forward with hiring and lock availability instantly.
+        </p>
+    </div>
+
+    <a href="{% url 'hire_tutor' tutor.id %}" class="view-btn">
+    Hire →
+</a>
+
+</div>
+
+
+</div>
+
+{% endblock %}

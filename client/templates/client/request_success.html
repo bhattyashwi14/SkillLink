@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="success-wrapper">
+    <div class="success-card">
+
+    <div class="checkmark">✓</div>
+
+    <h1>Request Sent Successfully!</h1>
+
+    <p>
+        Tutors will start responding to your hiring request soon.
+        You can track everything inside <span>My Requests</span>.
+    </p>
+
+    <a href="{% url 'my_requests' %}" class="success-btn">
+        View My Requests →
+    </a>
+
+</div>
+
+</div>
+
+<style>
+
+.success-wrapper{
+    min-height:90vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background: radial-gradient(circle at top,
+    #0f172a,
+    #020617);
+}
+
+.success-card{
+
+    width:500px;
+    padding:60px 40px;
+    text-align:center;
+
+    border-radius:20px;
+
+    background:linear-gradient(
+        145deg,
+        rgba(90,140,255,.15),
+        rgba(123,97,255,.08)
+    );
+
+    border:1px solid rgba(255,255,255,.08);
+
+    backdrop-filter: blur(12px);
+}
+
+.checkmark{
+
+    height:90px;
+    width:90px;
+    margin:auto;
+    margin-bottom:20px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:42px;
+    color:white;
+
+    background:linear-gradient(135deg,#5a8cff,#7b61ff);
+}
+
+.success-card h1{
+    color:white;
+    margin-bottom:10px;
+}
+
+.success-card p{
+    color:#cbd5e1;
+    margin-bottom:30px;
+}
+
+.success-card span{
+    color:#7b61ff;
+    font-weight:600;
+}
+
+.success-btn{
+
+    padding:14px 26px;
+    border-radius:10px;
+    text-decoration:none;
+
+    color:white;
+    font-weight:600;
+
+    background:linear-gradient(135deg,#5a8cff,#7b61ff);
+
+    transition:.25s;
+}
+
+.success-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 25px rgba(90,140,255,.4);
+}
+
+</style>
+
+{% endblock %}

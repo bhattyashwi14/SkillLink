@@ -1,0 +1,123 @@
+/* Page layout */
+.requests-page {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 20px;
+    color: #fff;
+}
+
+.page-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.page-subtitle {
+    color: #b5c0ff;
+    margin-bottom: 40px;
+}
+
+/* Grid */
+.requests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+/* Glass base */
+.glass {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.12),
+        rgba(255, 255, 255, 0.04)
+    );
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* Card */
+.request-card {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.request-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+}
+
+/* Header */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tutor-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* Status badges */
+.status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status.pending {
+    background: rgba(255, 193, 7, 0.25);
+    color: #ffc107;
+}
+
+.status.accepted {
+    background: rgba(76, 175, 80, 0.25);
+    color: #4caf50;
+}
+
+.status.rejected {
+    background: rgba(244, 67, 54, 0.25);
+    color: #f44336;
+}
+
+/* Body */
+.card-body p {
+    margin: 4px 0;
+    color: #e6e9ff;
+    font-size: 0.95rem;
+}
+
+/* Footer */
+.card-footer {
+    margin-top: auto;
+}
+
+.description {
+    font-size: 0.85rem;
+    color: #cfd6ff;
+    line-height: 1.5;
+}
+
+/* Empty state */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 30px;
+}
+
+.empty-state h2 {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #cfd6ff;
+}

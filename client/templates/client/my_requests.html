@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/my_requests.css' %}">
+
+<div class="requests-page">
+
+    <h1 class="page-title">My Hiring Requests</h1>
+    <p class="page-subtitle">
+        Track all the tutors you’ve contacted and their responses.
+    </p>
+
+    <div class="requests-grid">
+
+        {% for req in requests %}
+        <div class="request-card glass">
+
+            <div class="card-header">
+                <h3 class="tutor-name">{{ req.tutor.name }}</h3>
+                <span class="status {{ req.status|lower }}">
+                    {{ req.status }}
+                </span>
+            </div>
+
+            <div class="card-body">
+                <p><strong>Skill:</strong> {{ req.skill }}</p>
+                <p><strong>Budget:</strong> ₹{{ req.budget }}</p>
+                <p><strong>Duration:</strong> {{ req.duration }}</p>
+                <p><strong>Mode:</strong> {{ req.mode }}</p>
+            </div>
+
+            <div class="card-footer">
+                <p class="description">
+                    {{ req.description|truncatechars:90 }}
+                </p>
+            </div>
+
+        </div>
+        {% empty %}
+        <div class="empty-state glass">
+            <h2>No Requests Yet</h2>
+            <p>Once you send a hiring request, it will appear here.</p>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}

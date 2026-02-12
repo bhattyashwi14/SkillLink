@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<nav class="top-navbar">
+
+    <div class="nav-left">
+      <div class="brand">
+    <img src="{% static 'images/logo.jpeg' %}" class="logo">
+    <span class="brand-name">SkillLink</span>
+</div>
+
+        {% comment %} <img src="{% static 'images/logo.jpeg' %}" class="logo">
+        <span class="brand-text">SkillLink</span> {% endcomment %}
+    </div>
+
+    <div class="nav-right">
+
+        <form method="GET" class="nav-search">
+            <input 
+                type="text" 
+                name="q"
+                placeholder="Search interns or skills..."
+                value="{{ search_query }}"
+            >
+
+           <div class="custom-dropdown">
+
+    <!-- Selected / Placeholder -->
+    <div class="dropdown-selected placeholder"
+         onclick="toggleDropdown()"
+         id="selectedOption">
+
+         {{ search_by|default:"skill"|title }}
+
+        <span class="arrow">⌄</span>
+    </div>
+
+
+    <!-- Options -->
+    <div class="dropdown-options" id="dropdownMenu">
+
+        <div onclick="selectOption('intern')">Intern</div>
+        <div onclick="selectOption('skill') " class="{% if search_by == 'skill' %}active-option{% endif %}"
+        >Skill</div>
+
+    </div>
+
+    <!-- Hidden input for Django -->
+    <input type="hidden" name="search_by" id="searchByInput" value="{{ search_by|default:'skill' }}">
+
+</div>
+
+
+        </form>
+
+        <a href="{% url 'complete-profile' %}" class="edit-btn">
+            Edit Profile
+        </a>
+
+        <!-- Avatar -->
+        <div class="profile-menu">
+
+    <div class="avatar" onclick="toggleMenu()">
+        {{ request.user.username|first|upper }}
+    </div>
+
+    <div id="dropdown" class="dropdown">
+    <a href="{% url 'complete-profile' %}" class="dropdown-btn profile-btn">
+        My Profile
+    </a>
+
+    <a href="{% url 'client-logout' %}" class="dropdown-btn logout-btn">
+        Logout
+    </a>
+</div>
+
+
+</div>
+
+
+</nav>
+
+
+
+<div class="dashboard-shell">
+
+  <!-- ===== LEFT SIDEBAR ===== -->
+  <aside class="branding-panel" id="sidebar">
+    <div>
+      <h1 class="brand-title">SkillLink</h1>
+      <p class="brand-tagline">Smart learning, beautifully simple</p>
+
+      <div class="brand-divider"></div>
+
+      <div class="brand-section">
+        <h4 class="brand-heading">Why clients choose us</h4>
+        <ul>
+          <li><span class="icon">✔</span> Verified tutors</li>
+          <li><span class="icon">◎</span> Distraction-free</li>
+          <li><span class="icon">◆</span> Clarity & confidence</li>
+        </ul>
+      </div>
+
+      <div class="brand-section">
+        <h4 class="brand-heading">Our promise</h4>
+        <p>We remove noise from learning decisions.</p>
+      </div>
+    </div>
+
+    <p class="brand-quote">
+      <span class="icon">❝</span> Learning, but make it effortless.
+    </p>
+    {% comment %} Resixe sidebar handle {% endcomment %}
+     <div id="resizeHandle"></div>
+
+  </aside>
+
+  <!-- ===== MAIN DASHBOARD ===== -->
+  <main class="dashboard-main">
+
+    <div class="main-panel">
+
+      <!-- Client Dashboard Card -->
+      {% comment %} <div class="dashboard-card client-dashboard">
+        <div>
+          <h2 class="dashboard-title">Client Dashboard</h2>
+          <p>Search first. Decide calmly.</p>
+        </div>
+
+        <a href="{% url 'client-logout' %}" class="logout-btn">Logout</a>
+      </div> {% endcomment %}
+      {% comment %} <div class="dashboard-card client-dashboard">
+    <div>
+        <h2 class="dashboard-title">Client Dashboard</h2>
+        <p>Search first. Decide calmly.</p>
+    </div> {% endcomment %}
+{% comment %} <div style="display:flex; gap:10px;">
+    <a href="{% url 'complete-profile' %}" class="edit-btn">
+        Edit Profile
+    </a>
+
+    <a href="{% url 'client-logout' %}" class="logout-btn">
+        Logout
+    </a>
+</div> {% endcomment %}
+
+
+</div>
+
+      <!-- Search Card -->
+      {% comment %} <div class="dashboard-card search-card">
+        <div class="search-header">
+          <h2 class="search-title">Find Intern</h2>
+        </div>
+
+        <form method="get" class="search-form wide">
+          <input
+            type="text"
+            name="q"
+            placeholder="Enter tutor name or subject"
+            value="{{ search_query }}"
+            required
+          >
+
+          <select name="search_by">
+            <option value="name" {% if search_by == "name" %}selected{% endif %}>Name</option>
+            <option value="skill" {% if search_by == "skill" %}selected{% endif %}>Subject</option>
+          </select>
+
+          <button type="submit" class="btn-primary">Search</button>
+
+        </form>
+      </div> {% endcomment %}
+
+      <!-- Tutors -->
+      {% comment %} <div class="dashboard-card">
+        <h3 class="section-title">Available Tutors</h3>
+
+        {% if tutors %}
+          <ul class="tutor-list">
+            {% for tutor in tutors %}
+              <li class="tutor-card">
+                <strong>{{ tutor.user.first_name }} {{ tutor.user.last_name }}</strong><br>
+                <span>{{ tutor.skills }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="empty-text">No tutors found.</p>
+        {% endif %}
+      </div>
+
+    </div>
+  </main>
+
+</div> {% endcomment %}
+<div class="dashboard-card">
+
+<h2 class="section-title">Explore Skills</h2>
+
+<div class="skills-grid">
+  {% for skill in skills %}
+
+<a href="{% url 'skill-detail' skill.name|slugify %}" class="skill-card">
+
+   
+         {% comment %} background-image:url('https://source.unsplash.com/600x400/?{{ skill.name|slugify }},technology'); {% endcomment %}
+    <img src="https://tse1.mm.bing.net/th?q={{ skill.name|lower }}+software+development+coding&pid=Api"
+     class="skill-img">
+
+    <div class="skill-overlay">
+        <h3>{{ skill.name }}</h3>
+        <p>{{ skill.total }} Interns Available</p>
+    </div>
+
+</a>
+
+
+{% comment %} <div class="skill-card"> may be add later {% endcomment %}
+
+  {% comment %} <h4>{{ skill.name }}</h4>
+<p>{{ skill.total }} interns available</p> {% endcomment %}
+  
+  {% comment %} <h4>{{ skill.skills }}</h4>
+    <p>{{ skill.total }} interns available</p> {% endcomment %}
+
+    {% comment %} I will add it later when tutor app arrives {% endcomment %}
+
+{% comment %} </div> {% endcomment %}
+
+{% empty %}
+
+    <div class="no-results">
+        No skills found 😕
+    </div>
+{% endfor %}
+{% comment %} {%else%}
+<div class="no-results">
+        No such skills available 😔
+    </div>
+{% endif %} {% endcomment %}
+
+</div>
+</div>
+
+<script>
+
+function toggleMenu(){
+    document.getElementById("dropdown").classList.toggle("show");
+}
+
+window.onclick = function(e){
+    if(!e.target.matches('.avatar')){
+        document.querySelectorAll(".dropdown")
+        .forEach(menu => menu.classList.remove("show"));
+    }
+}
+
+function toggleDropdown() {
+    document.getElementById("dropdownMenu")
+        .classList.toggle("show");
+}
+
+
+function selectOption(value){
+
+    const selected = document.getElementById("selectedOption");
+
+    selected.innerHTML =
+        value.charAt(0).toUpperCase() + value.slice(1) +
+        ' <span class="arrow">⌄</span>';
+
+    document.getElementById("searchByInput").value = value;
+    document.getElementById("selectedOption").innerText = value;
+
+    selected.classList.remove("placeholder");
+
+    toggleDropdown();
+}
+
+
+const sidebar = document.getElementById("sidebar");
+const handle = document.getElementById("resizeHandle");
+
+let isResizing = false;
+
+handle.addEventListener("mousedown", () => {
+    isResizing = true;
+});
+
+document.addEventListener("mousemove", (e) => {
+
+    if(!isResizing) return;
+
+    let newWidth = e.clientX;
+
+    if(newWidth < 180) newWidth = 180;
+    if(newWidth > 420) newWidth = 420;
+
+    sidebar.style.width = newWidth + "px";
+});
+
+document.addEventListener("mouseup", () => {
+    isResizing = false;
+}); 
+</script>
+{% endblock %}
+

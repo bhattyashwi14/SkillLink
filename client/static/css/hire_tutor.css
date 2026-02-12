@@ -1,0 +1,40 @@
+.hire-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 22px;
+    border-radius:14px;
+    background: linear-gradient(135deg, #ff8a00, #ff3d81);
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    text-decoration:none;
+    letter-spacing:.3px;
+    box-shadow: 0 10px 28px rgba(255,61,129,.35);
+    transition: all .25s ease;
+}
+
+/* hover */
+.hire-btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 14px 36px rgba(255,61,129,.55);
+}
+
+/* click */
+.hire-btn:active{
+    transform: translateY(0);
+}
+.hire-btn-outline{
+    padding:11px 20px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.25);
+    color:#ffd1e0;
+    font-weight:600;
+    text-decoration:none;
+    transition:.25s;
+}
+
+.hire-btn-outline:hover{
+    background: rgba(255,61,129,.15);
+    border-color: rgba(255,61,129,.6);
+}
