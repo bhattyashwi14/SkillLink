@@ -947,6 +947,202 @@ font-size:13px;
 color:#7dd3fc;
 }
 
+/* CHAT BUTTON */
+#chatbot-button{
+position:fixed;
+bottom:28px;
+right:28px;
+width:58px;
+height:58px;
+border-radius:50%;
+background:linear-gradient(135deg,#0ea5e9,#6366f1);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+cursor:pointer;
+box-shadow:0 12px 30px rgba(0,0,0,0.6);
+z-index:3000;
+transition:0.3s ease;
+}
+
+#chatbot-button:hover{
+transform:scale(1.08);
+}
+
+/* CHAT WINDOW */
+#chat-window{
+box-shadow:
+0 25px 60px rgba(0,0,0,0.6),
+0 0 40px rgba(99,102,241,0.15);
+position:fixed;
+bottom:100px;
+right:28px;
+width:340px;
+height:440px;
+
+background:rgba(15,23,42,0.85);
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(125,211,252,0.2);
+border-radius:22px;
+
+display:flex;
+flex-direction:column;
+overflow:hidden;
+z-index:2000;
+
+opacity:0;
+visibility:hidden;
+transform:translateY(20px);
+transition:all 0.25s ease;
+}
+
+#chat-window.active{
+opacity:1;
+visibility:visible;
+transform:translateY(0);
+}
+
+/* HEADER */
+.chat-header{
+padding:16px;
+font-weight:600;
+font-size:14px;
+border-bottom:1px solid rgba(125,211,252,0.15);
+
+background:linear-gradient(
+90deg,
+rgba(34,211,238,0.08),
+rgba(99,102,241,0.08)
+);
+}
+
+/* BODY */
+.chat-body{
+flex:1;
+padding:16px;
+overflow-y:auto;
+font-size:13px;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+/* BOT MESSAGE */
+.bot-msg{
+background:linear-gradient(
+135deg,
+rgba(34,211,238,0.07),
+rgba(99,102,241,0.07)
+);
+padding:10px 14px;
+border-radius:16px;
+max-width:75%;
+}
+
+/* USER MESSAGE */
+.user-msg{
+background:linear-gradient(135deg,#0ea5e9,#6366f1);
+padding:10px 14px;
+border-radius:16px;
+align-self:flex-end;
+max-width:75%;
+}
+
+/* INPUT AREA */
+.chat-input-area{
+display:flex;
+border-top:1px solid rgba(125,211,252,0.15);
+
+background:linear-gradient(
+90deg,
+rgba(34,211,238,0.05),
+rgba(139,92,246,0.05)
+);
+}
+
+#chat-input{
+flex:1;
+background:transparent;
+border:none;
+padding:12px;
+color:white;
+font-size:13px;
+outline:none;
+}
+
+.chat-input-area button{
+background:transparent;
+border:none;
+color:#7dd3fc;
+font-weight:600;
+padding:0 16px;
+cursor:pointer;
+}
+
+.chat-action{
+        display:inline-block;
+        margin-top:6px;
+        margin-right:6px;
+        padding:6px 12px;
+        border-radius:14px;
+        font-size:12px;
+        text-decoration:none;
+        border:1px solid rgba(125,211,252,0.3);
+        color:#7dd3fc;
+        transition:0.2s;
+        }
+
+        .chat-action:hover{
+        background:rgba(125,211,252,0.1);
+        }
+.chat-brand{
+background: linear-gradient(
+90deg,
+#22d3ee 0%,
+#38bdf8 25%,
+#6366f1 55%,
+#8b5cf6 80%,
+#a78bfa 100%
+);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+font-weight:700;
+letter-spacing:0.5px;
+}
+
+#chat-window::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:3px;
+background:linear-gradient(
+90deg,
+#22d3ee,
+#38bdf8,
+#6366f1,
+#a78bfa
+);
+}
+
+#chat-window::after{
+content:"";
+position:absolute;
+bottom:0;
+left:0;
+width:100%;
+height:2px;
+background:linear-gradient(
+90deg,
+#22d3ee,
+#6366f1
+);
+opacity:0.6;
+}
+
 </style>
 </head>
 
@@ -1001,10 +1197,14 @@ placeholder="Search skills...">
 </div>
 
 <div class="col-md-3">
+<a href="{% url 'learned_skills' %}" style="text-decoration:none; color:inherit;">
 <div class="stat-card">
-<div class="stat-value">3</div>
+<div class="stat-value">
+{{ learned_skills|length }}
+</div>
 <div class="stat-label">Skills Learned</div>
 </div>
+</a>
 </div>
 
 <div class="col-md-3">
@@ -1067,6 +1267,108 @@ card.style.display = text.includes(value) ? "" : "none";
 });
 });
 </script>
+
+<!-- Chatbot Button -->
+<div id="chatbot-button" onclick="toggleChat()" style="position:fixed; bottom:25px; right:25px; z-index:3000;">
+    💬
+</div>
+
+<!-- Chat Window -->
+<div id="chat-window">
+    <div class="chat-header d-flex justify-content-between align-items-center px-3">
+        <span class="chat-brand">SkillLink</span>
+        <span style="opacity:0.7;">Assistant</span>
+        <span style="cursor:pointer;font-size:14px;" onclick="clearChat()">Clear</span>
+    </div>
+    <div class="chat-body" id="chat-body">
+        <div class="bot-msg">Hi 👋 How can I help you today?</div>
+    </div>
+
+    <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+</div>
+
+<script>
+
+function toggleChat(){
+    const chat = document.getElementById("chat-window");
+    chat.classList.toggle("active");
+}
+
+function sendMessage(){
+
+    const input = document.getElementById("chat-input");
+    const message = input.value.trim();
+
+    if(message === "") return;
+
+    const chatBody = document.getElementById("chat-body");
+
+    // USER MESSAGE
+    const userMsg = document.createElement("div");
+    userMsg.className = "user-msg";
+    userMsg.innerText = message;
+    chatBody.appendChild(userMsg);
+
+    input.value = "";
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    // Show typing indicator
+    const typingMsg = document.createElement("div");
+    typingMsg.className = "bot-msg";
+    typingMsg.id = "typing-indicator";
+    typingMsg.innerText = "SkillLink Assistant is typing...";
+    chatBody.appendChild(typingMsg);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+
+    // FETCH BACKEND RESPONSE
+    fetch(`/learn/chatbot-response/?message=${encodeURIComponent(message)}`)
+    .then(response => response.json())
+    .then(data => {
+    setTimeout(() => {
+    // Remove typing indicator
+    const typingIndicator = document.getElementById("typing-indicator");
+    if (typingIndicator) typingIndicator.remove();
+    const botWrapper = document.createElement("div");
+    botWrapper.className = "bot-msg";
+
+    const text = document.createElement("div");
+    text.innerText = data.reply;
+    botWrapper.appendChild(text);
+
+    // 🔥 ACTION BUTTONS
+    if(data.actions && data.actions.length > 0){
+        data.actions.forEach(action => {
+            const btn = document.createElement("a");
+            btn.className = "chat-action";
+            btn.href = action.url;
+            btn.innerText = action.label;
+
+            botWrapper.appendChild(btn);
+        });
+    }
+
+    chatBody.appendChild(botWrapper);
+    chatBody.scrollTop = chatBody.scrollHeight;
+    }, 800);  })
+
+    .catch(error => {
+        console.error("Error:", error);
+    });
+
+}
+
+function clearChat(){
+    const chatBody = document.getElementById("chat-body");
+    chatBody.innerHTML = '<div class="bot-msg">Hi 👋 How can I help you today?</div>';
+}
+
+</script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

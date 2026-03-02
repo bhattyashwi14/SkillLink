@@ -1,0 +1,17 @@
+
+SkillLink Booking Receipt
+----------------------------
+
+Tutor: Khushi Mulchandani
+Student: bhattyashwi@gmail.com
+Day: Friday
+Time: 08:00:00 - 10:00:00
+
+Meeting Link:
+https://meet.jit.si/skilllink-4-c3f62b
+
+Booked At:
+2026-02-13 06:20:03.927661+00:00
+
+Status:
+booked

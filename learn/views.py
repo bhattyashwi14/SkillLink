@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from core.models import StudentProfile
 from tutor.models import Skill, TutorProfile, Booking
+from tutor.models import Review, TutorProfile
+from django.db.models import Avg
 
 
 from tutor.models import TutorProfile, Skill 
@@ -112,14 +114,21 @@ def signup(request):
 
 
         if action == "create_account":
-            if not password==confirm_password:
-                return render(request, "core/signup.html", 
-                    {"match_error": "Passcodes do not match",
+
+            if User.objects.filter(username=email).exists():
+                return render(request, "core/signup.html", {
+                "email_error": "This account already exists. Please login.",
+                "email": email,
+            })
+
+            if not password == confirm_password:
+                return render(request, "core/signup.html", {
+                    "match_error": "Passcodes do not match",
                     "email": email,
                     "otp": otp,
                     "show_otp": True,
                     "show_password": True,
-                    })
+                })
 
             if len(password)<8 or len(password)>12:
                 return render(request, "core/signup.html",
@@ -158,22 +167,23 @@ def signup(request):
                         "show_otp": True,
                         "show_password": True,})  
             
-            User.objects.create_user(
-                                        username=email,
-                                        email=email,
-                                        password=password
-                                    )
+            user = User.objects.create_user(
+            username=email,
+            email=email,
+            password=password
+        )
 
+        # ⭐ VERY IMPORTANT — LOGIN USER HERE
+        login(request, user)
 
-            # CLEAN SESSION
-            request.session.pop("otp", None)
+        # CLEAN SESSION
+        request.session.pop("otp", None)
 
-            # return render(request, "core/signup.html", {
-            #     "success": "Account created successfully!"
-            # })
-            request.session["email"] = email
-            request.session["profile_completed"] = False
-            return redirect("profile")
+        request.session["email"] = email
+        request.session["profile_completed"] = False
+
+        return redirect("profile")
+
 
 
 
@@ -300,7 +310,21 @@ def dashboard(request):
     ]
 
 
+    # ===============================
+    # COMPLETED SESSIONS → SKILLS LEARNED
+    # ===============================
 
+    completed_bookings = Booking.objects.filter(
+        student=user,
+        status="completed"
+    ).select_related("availability")
+
+    learned_skills = list(
+        set(
+            booking.availability.skill_name
+            for booking in completed_bookings
+        )
+    )
 
     return render(request, "core/learner_dashboard.html", {
     "profile_completed": profile.profile_completed,
@@ -309,10 +333,7 @@ def dashboard(request):
     "profile_completion": completion,
     "skills_data": skills_data,
     "upcoming_sessions_count": upcoming_sessions_count,
-        })
-
-
-
+    "learned_skills": learned_skills, })
 
 
 def profile(request):
@@ -372,7 +393,7 @@ def skill_tutors(request, skill_name):
 
 
     return render(request, "core/skill_tutors.html", {
-        "skill": {"name": normalized_skill},
+        "skill_name": skill_name,
         "tutors": filtered_tutors
     })
 
@@ -398,8 +419,258 @@ def upcoming_sessions(request):
     return render(request, "core/upcoming_sessions.html", {
         "bookings": bookings
     })
+from tutor.models import Review
+from django.db.models import Avg
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from tutor.models import Booking, Review, TutorProfile
+
+from django.shortcuts import get_object_or_404, redirect
+from tutor.models import Booking
+from django.contrib.auth.decorators import login_required
+
+from django.shortcuts import get_object_or_404
+from tutor.models import Booking
+
+@login_required
+def mark_completed(request, booking_id):
+
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id,
+        student=request.user,
+        status="booked"
+    )
+
+    return redirect("add_review", booking_id=booking.id)
+
+
+@login_required
+def add_review(request, booking_id):
+
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id,
+        student=request.user,
+        status="booked"
+    )
+
+    # Prevent duplicate review
+    if hasattr(booking, "review"):
+        return redirect("dashboard")
+
+    if request.method == "POST":
+
+        rating = int(request.POST.get("rating"))
+        review_text = request.POST.get("review_text")
+
+        # Create Review
+        Review.objects.create(
+            booking=booking,
+            student=request.user,
+            tutor=booking.tutor,
+            rating=rating,
+            review_text=review_text
+        )
+
+        # ⭐ NOW mark as completed
+        booking.status = "completed"
+        booking.save()
+
+        tutor = booking.tutor
+        tutor.total_students += 1
+
+        avg_rating = tutor.reviews_received.aggregate(
+            Avg("rating")
+        )["rating__avg"]
+
+        tutor.rating = round(avg_rating, 2)
+        tutor.save()
+
+        return redirect("dashboard")
+
+    return render(request, "core/add_review.html", {
+        "booking": booking
+    })
+
+
+@login_required
+def learned_skills(request):
+
+    bookings = Booking.objects.filter(
+        student=request.user,
+        status="completed"
+    ).select_related("tutor", "availability")
+
+    return render(request, "core/learned_skills.html", {
+        "bookings": bookings
+    })
 
 
 
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from tutor.models import Booking
+
+from core.models import StudentProfile
+
+def skills_data_builder():
+
+    skills_map = {}
+
+    approved_tutors = TutorProfile.objects.filter(
+        is_approved=True,
+        teaching_skills__isnull=False
+    ).exclude(teaching_skills="")
+
+    for tutor in approved_tutors:
+        raw_skills = tutor.teaching_skills.split(",")
+
+        for skill in raw_skills:
+            clean_skill = skill.strip().upper()
+
+            if clean_skill:
+                skills_map[clean_skill] = skills_map.get(clean_skill, 0) + 1
+
+    return list(skills_map.keys())
+
+@login_required
+def chatbot_response(request):
+
+    actions = []
+
+    message = request.GET.get("message", "").lower()
+    last_topic = request.session.get("chat_last_topic")
+    user = request.user
+
+    profile = StudentProfile.objects.get(user=user)
+
+    # 🔥 Recalculate completion dynamically
+    completion = 0
+    if profile.full_name:
+        completion += 20
+    if profile.semester:
+        completion += 20
+    if profile.department:
+        completion += 20
+    if profile.skills:
+        completion += 20
+    if profile.linkedin:
+        completion += 10
+    if profile.github:
+        completion += 10
+
+    upcoming_sessions = Booking.objects.filter(
+        student=user,
+        status="booked"
+    ).count()
+
+    learned_sessions = Booking.objects.filter(
+        student=user,
+        status="completed"
+    ).count()
+
+    # 🔥 RECOMMENDED SKILLS (Not Yet Learned)
+    completed_skills = set(
+        Booking.objects.filter(
+            student=user,
+            status="completed"
+        ).values_list("availability__skill_name", flat=True)
+    )
+
+    recommended_skills = []
+
+    for skill in skills_data_builder():
+        if skill not in completed_skills:
+            recommended_skills.append(skill)
+
+    recommended_skills = recommended_skills[:3]  # top 3 only
+
+    # 🔥 SMART DECISION LAYER FIRST
+    if message in ["hi", "hello", "hey"]:
+
+        request.session["chat_last_topic"] = None
+
+        if completion < 100:
+            response = f"Your profile is {completion}% complete."
+            actions = [
+                {"label": "Complete Profile", "url": "/learn/profile/"}
+            ]
+
+        elif upcoming_sessions == 0:
+            response = "You don’t have any upcoming sessions."
+            actions = [
+                {"label": "Explore Skills", "url": "/learn/dashboard/"}
+            ]
+
+        else:
+            response = f"You have {upcoming_sessions} upcoming sessions."
+            actions = [
+                {"label": "View Sessions", "url": "/learn/upcoming-sessions/"}
+            ]
+
+
+    elif "profile" in message:
+        request.session["chat_last_topic"] = "profile"
+        response = f"Your profile is {completion}% complete."
+
+    elif "session" in message:
+        request.session["chat_last_topic"] = "sessions"
+        response = f"You have {upcoming_sessions} upcoming sessions."
+
+    elif "skill" in message:
+        request.session["chat_last_topic"] = "skills"
+        response = f"You have completed {learned_sessions} sessions so far."
+
+    elif "start" in message or "begin" in message:
+        if upcoming_sessions == 0:
+            response = "You haven't booked any session yet. Try exploring skills!"
+        else:
+            response = "You already have sessions booked. Keep learning 🚀"
+    
+    elif (
+            "recommend" in message
+            or "suggest" in message
+            or "what should i learn" in message
+            or "what to learn" in message
+            or "next skill" in message
+        ):
+        request.session["chat_last_topic"] = "recommend"
+
+        if recommended_skills:
+            response = "Here are some skills you may like:"
+            actions = [
+                {
+                    "label": skill.title(),
+                    "url": f"/learn/skill/{skill}/"
+                }
+                for skill in recommended_skills
+            ]
+        else:
+            response = "You’ve explored all available skills! 🔥"
+
+    elif any(word in message for word in ["how much", "how many", "status", "progress"]):
+
+        if last_topic == "profile":
+            response = f"Your profile is {completion}% complete."
+
+        elif last_topic == "sessions":
+            response = f"You have {upcoming_sessions} upcoming sessions."
+
+        elif last_topic == "skills":
+            response = f"You have completed {learned_sessions} sessions so far."
+
+        else:
+            # Intelligent default
+            response = f"You have {upcoming_sessions} upcoming sessions and your profile is {completion}% complete."
+
+    else:
+        response = "Try asking about your profile, sessions or skills."
+    
+    return JsonResponse({
+    "reply": response,
+    "actions": actions
+    })
 
 

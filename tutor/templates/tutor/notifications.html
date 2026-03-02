@@ -1,0 +1,485 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+
+{% comment %} {% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+/* PAGE BACKGROUND */
+
+body{
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    min-height:100vh;
+}
+
+
+/* CONTAINER */
+
+.notification-container{
+    width:85%;
+    max-width:900px;
+    margin:60px auto;
+}
+
+
+/* TITLE */
+
+.title{
+    color:white;
+    font-size:32px;
+    font-weight:600;
+    margin-bottom:30px;
+}
+
+
+/* GLASS CARD */
+
+.glass-card{
+
+    backdrop-filter: blur(18px);
+    background: rgba(255,255,255,0.08);
+
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:20px;
+
+    box-shadow:0 8px 32px rgba(0,0,0,0.35);
+
+    transition:0.3s ease;
+}
+
+.glass-card:hover{
+    transform:translateY(-6px);
+}
+
+
+/* USERNAME */
+
+.username{
+    color:white;
+    font-size:22px;
+    font-weight:600;
+}
+
+
+/* MESSAGE */
+
+.message{
+    color:#d1d5db;
+    margin:12px 0;
+}
+
+
+/* STATUS BADGE */
+
+.status{
+
+    display:inline-block;
+    padding:6px 14px;
+    border-radius:12px;
+    font-size:14px;
+    font-weight:500;
+}
+
+.pending{
+    background:#ffb300;
+    color:black;
+}
+
+.accepted{
+    background:#00c853;
+    color:white;
+}
+
+.rejected{
+    background:#ff1744;
+    color:white;
+}
+
+
+/* BUTTONS */
+
+.btn-group{
+    margin-top:18px;
+}
+
+.btn{
+
+    padding:10px 22px;
+    border-radius:14px;
+    text-decoration:none;
+    font-weight:600;
+    transition:0.25s;
+}
+
+.accept{
+    background:#00c853;
+    color:white;
+}
+
+.reject{
+    background:#ff1744;
+    color:white;
+    margin-left:10px;
+}
+
+.btn:hover{
+    transform:scale(1.05);
+}
+
+
+/* EMPTY TEXT */
+
+.empty{
+    color:#cbd5e1;
+    font-size:18px;
+}
+
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.notification-container{
+    width:92%;
+}
+
+.title{
+    font-size:26px;
+}
+
+}
+
+</style>
+
+<div class="notification-container">
+
+<div class="title">
+    🔔 Hiring Requests
+</div>
+
+
+{% for req in requests %}
+
+<div class="glass-card">
+
+    <div class="username">
+        {{ req.client.username }}
+    </div>
+
+    <div class="message">
+        <strong>Skill:</strong> {{ req.skill }} <br>
+        <strong>Budget:</strong> ₹{{ req.budget }} <br>
+        <strong>Duration:</strong> {{ req.duration }} <br>
+        <strong>Mode:</strong> {{ req.mode|title }} <br>
+        <strong>Description:</strong> {{ req.description }}<br> <br>
+        <a href="{% url 'tutor:company_profile' req.client.id %}"
+            class="btn btn-sm mt-2"
+            style="
+            background:rgba(147,197,253,0.1);
+            border:1px solid #93c5fd;
+            color:#93c5fd;
+            border-radius:12px;">
+            About Company
+        </a>
+
+    </div>
+
+    <div>
+
+        <span class="status {{ req.status }}">
+            {{ req.status|title }}
+        </span>
+
+    </div>
+
+
+    {% if req.status == 'pending' %}
+
+    <div class="btn-group">
+
+        <a href="{% url 'tutor:accept_request' req.id %}" class="btn accept">
+            Accept
+        </a>
+
+        <a href="{% url 'tutor:reject_request' req.id %}" class="btn reject">
+            Reject
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% empty %}
+
+<p class="empty">No hiring requests yet.</p>
+
+{% endfor %}
+
+</div>
+
+{% endblock %} {% endcomment %}
+
+<style>
+
+body{
+background:#0b0b1a;
+font-family:Poppins;
+color:white;
+}
+
+/* Container */
+.notification-container{
+width:90%;
+max-width:950px;
+margin:70px auto;
+}
+
+/* Page Title */
+.page-title{
+font-size:32px;
+font-weight:700;
+background:linear-gradient(45deg,#93c5fd,#c084fc);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+margin-bottom:40px;
+}
+
+/* Card */
+.request-card{
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(147,197,253,0.15);
+border-radius:24px;
+padding:30px;
+margin-bottom:25px;
+backdrop-filter:blur(16px);
+transition:0.3s;
+}
+
+.request-card:hover{
+transform:translateY(-6px);
+border-color:#93c5fd;
+box-shadow:0 15px 35px rgba(0,0,0,0.5);
+}
+
+/* Top Row */
+.card-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+margin-bottom:15px;
+}
+
+/* Username */
+.client-name{
+font-size:20px;
+font-weight:600;
+}
+
+/* Status Badge */
+.status-pill{
+padding:6px 16px;
+border-radius:50px;
+font-size:13px;
+font-weight:500;
+text-transform:capitalize;
+}
+
+.pending{
+background:rgba(250,204,21,0.2);
+color:#facc15;
+border:1px solid #facc15;
+}
+
+.accepted{
+background:rgba(34,197,94,0.2);
+color:#22c55e;
+border:1px solid #22c55e;
+}
+
+.rejected{
+background:rgba(239,68,68,0.2);
+color:#ef4444;
+border:1px solid #ef4444;
+}
+
+/* Info Grid */
+.info-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+margin-top:15px;
+font-size:14px;
+color:#cbd5e1;
+}
+
+.label{
+color:#94a3b8;
+font-size:12px;
+text-transform:uppercase;
+letter-spacing:1px;
+}
+
+/* Description */
+.description{
+margin-top:20px;
+color:#e2e8f0;
+line-height:1.6;
+}
+
+/* Buttons Row */
+.action-row{
+margin-top:25px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:15px;
+}
+
+/* About Button */
+.about-btn{
+background:rgba(147,197,253,0.1);
+border:1px solid #93c5fd;
+color:#93c5fd;
+padding:8px 18px;
+border-radius:14px;
+text-decoration:none;
+font-weight:500;
+transition:0.3s;
+}
+
+.about-btn:hover{
+background:#93c5fd;
+color:#0b0b1a;
+}
+
+/* Accept Reject */
+.accept-btn{
+background:linear-gradient(45deg,#22c55e,#16a34a);
+border:none;
+padding:8px 20px;
+border-radius:14px;
+color:white;
+text-decoration:none;
+font-weight:500;
+transition:0.3s;
+}
+
+.reject-btn{
+background:linear-gradient(45deg,#ef4444,#dc2626);
+border:none;
+padding:8px 20px;
+border-radius:14px;
+color:white;
+text-decoration:none;
+font-weight:500;
+transition:0.3s;
+}
+
+.accept-btn:hover,
+.reject-btn:hover{
+transform:scale(1.05);
+}
+
+/* Empty State */
+.empty-state{
+text-align:center;
+color:#94a3b8;
+font-size:18px;
+margin-top:60px;
+}
+
+</style>
+
+<div class="notification-container">
+
+<div class="page-title">
+🔔 Hiring Requests
+</div>
+
+{% for req in requests %}
+
+<div class="request-card">
+
+    <!-- Top Row -->
+    <div class="card-header">
+        <div class="client-name">
+            {{ req.client.username }}
+        </div>
+
+        <span class="status-pill {{ req.status }}">
+            {{ req.status }}
+        </span>
+    </div>
+
+    <!-- Info Grid -->
+    <div class="info-grid">
+        <div>
+            <div class="label">Skill</div>
+            {{ req.skill }}
+        </div>
+
+        <div>
+            <div class="label">Budget</div>
+            ₹{{ req.budget }}
+        </div>
+
+        <div>
+            <div class="label">Duration</div>
+            {{ req.duration }}
+        </div>
+
+        <div>
+            <div class="label">Mode</div>
+            {{ req.mode|title }}
+        </div>
+    </div>
+
+    <!-- Description -->
+    <div class="description">
+        <div class="label">Description</div>
+        {{ req.description }}
+    </div>
+
+    <!-- Actions -->
+    <div class="action-row">
+
+        <a href="{% url 'tutor:company_profile' req.client.id %}" 
+           class="about-btn">
+            About Company
+        </a>
+
+        {% if req.status == 'pending' %}
+        <div style="display:flex; gap:12px;">
+            <a href="{% url 'tutor:accept_request' req.id %}" class="accept-btn">
+                Accept
+            </a>
+            <a href="{% url 'tutor:reject_request' req.id %}" class="reject-btn">
+                Reject
+            </a>
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% empty %}
+
+<div class="empty-state">
+No hiring requests yet.
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

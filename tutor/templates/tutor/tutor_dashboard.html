@@ -152,6 +152,17 @@ h4, h5 {
     .offcanvas .form-control {
         border-radius: 10px;
     }
+
+    .schedule-pill:hover{
+    background: rgba(147, 197, 253, 0.08);
+    border-color: #93c5fd;
+}
+
+    input::placeholder {
+        color: #94a3b8 !important;
+        opacity: 1;
+    }
+
 </style>
 </head>
 <body>
@@ -176,17 +187,50 @@ h4, h5 {
             </div>
         </div> {% endcomment %}
         <div class="d-flex align-items-center">
-            <span class="me-3 d-none d-md-inline text-muted">Welcome, {{ request.user.username }}</span>
-            <div class="rounded-circle overflow-hidden" 
-                style="width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer;"
-                data-bs-toggle="offcanvas" data-bs-target="#profileSidebar">
-                {% if profile.profile_pic %}
-                    <img src="{{ profile.profile_pic.url }}" class="w-100 h-100" style="object-fit: cover;">
-                {% else %}
-                    <div class="avatar-sm">{{ request.user.username|slice:":1" }}</div>
-                {% endif %}
+
+    <!-- 🔔 Notification Bell -->
+    <a href="{% url 'tutor:tutor_notifications' %}" 
+       class="position-relative me-4"
+       style="text-decoration:none; font-size:22px; color:white;">
+
+        🔔
+
+        {% if pending_count > 0 %}
+        <span style="
+            position:absolute;
+            top:-6px;
+            right:-10px;
+            background:red;
+            color:white;
+            border-radius:50%;
+            padding:2px 6px;
+            font-size:12px;
+            font-weight:bold;">
+            {{ pending_count }}
+        </span>
+        {% endif %}
+    </a>
+
+    <span class="me-3 d-none d-md-inline text-muted">
+        Welcome, {{ request.user.username }}
+    </span>
+
+    <div class="rounded-circle overflow-hidden"
+        style="width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer;"
+        data-bs-toggle="offcanvas" data-bs-target="#profileSidebar">
+
+        {% if profile.profile_pic %}
+            <img src="{{ profile.profile_pic.url }}" class="w-100 h-100" style="object-fit: cover;">
+        {% else %}
+            <div class="avatar-sm">
+                {{ request.user.username|slice:":1" }}
             </div>
-        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
     </div>
 </nav>
 
@@ -243,22 +287,126 @@ h4, h5 {
 
                 <div class="col-12">
                     <div class="dashboard-card">
-                        <h5 class="fw-bold mb-4">Active Schedule</h5>
-                        <div class="row">
-                            {% if availabilities %}
-                                {% for slot in availabilities %}
-                                <div class="col-md-6">
-                                    <div class="schedule-pill d-flex justify-content-between align-items-center">
-                                        <span class="fw-bold text-info">{{ slot.day_of_week }}</span>
-                                        <span class="small">{{ slot.start_time|time:"g:i A" }} - {{ slot.end_time|time:"g:i A" }}</span>
+                            <h5 class="fw-bold mb-4">Active Schedule</h5>
+
+                                {% if editable_slots %}
+                                    {% for slot in editable_slots %}
+                                    <a href="{% url 'tutor:edit_slot' slot.id %}" 
+                                        class="schedule-pill d-flex justify-content-between align-items-center 
+                                        flex-wrap text-decoration-none text-white">
+
+
+                                            <div>
+                                                <div class="fw-bold text-info">
+                                                    {{ slot.skill_name }}
+                                                </div>
+
+                                                <div class="small text-muted">
+                                                    {{ slot.date|date:"D, d M Y" }}
+                                                </div>
+                                            </div>
+
+                                            <div class="small fw-semibold">
+                                                🕒 {{ slot.start_time|time:"g:i A" }} - {{ slot.end_time|time:"g:i A" }}
+                                            </div>
+
+                                    </a>
+
+                                    {% endfor %}
+                    
+                                {% else %}
+                                    <div class="col-12">
+                                        <p class="text-muted italic">No availability slots set yet.</p>
                                     </div>
+                                {% endif %}
+                                <div class="mt-4 text-end">
+                                    <a href="{% url 'tutor:add_slot' %}" 
+                                        class="btn btn-sm px-4 py-2 text-white"
+                                        style="background: linear-gradient(45deg, #6366f1, #a855f7); border-radius: 12px;">
+                                            + Add Slot
+                                    </a>
                                 </div>
-                                {% endfor %}
-                            {% else %}
-                                <div class="col-12">
-                                    <p class="text-muted italic">No availability slots set yet.</p>
-                                </div>
-                            {% endif %}
+                                <hr class="border-secondary my-5">
+                                <h5 class="fw-bold mb-4">Booked Sessions</h5>
+                                {% if active_bookings %}
+                                    {% for booking in active_bookings %}
+                                        <div class="schedule-pill d-flex justify-content-between align-items-center flex-wrap">
+
+                                            <div>
+                                                <div class="fw-bold text-warning">
+                                                    {{ booking.availability.skill_name }}
+                                                </div>
+
+                                                <div class="small text-muted">
+                                                    {{ booking.availability.date|date:"D, d M Y" }}
+                                                </div>
+
+                                                <div class="small">
+                                                    👤 Student: {{ booking.student.username }}
+                                                </div>
+
+                                                {% if booking.meeting_link %}
+                                                <div class="mt-2">
+                                                    <a href="{{ booking.meeting_link }}"
+                                                    target="_blank"
+                                                    class="btn btn-sm text-white"
+                                                    style="background: linear-gradient(45deg,#0ea5e9,#6366f1); border-radius: 10px;">
+                                                        🔗 Join Meeting
+                                                    </a>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="small fw-semibold">
+                                                🕒 {{ booking.availability.start_time|time:"g:i A" }} -
+                                                {{ booking.availability.end_time|time:"g:i A" }}
+                                            </div>
+
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="text-muted">No booked sessions yet.</p>
+                                {% endif %}
+
+                                <hr class="border-secondary my-5">
+
+                                {% if completed_sessions %}
+
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <h5 class="fw-bold m-0">Completed Sessions</h5>
+                                        <a href="{% url 'tutor:session_history' %}" 
+                                        class="text-info text-decoration-none small">
+                                            View Full History →
+                                        </a>
+                                    </div>
+
+                                    {% for booking in completed_sessions|slice:":2" %}
+                                    <div class="schedule-pill d-flex justify-content-between align-items-center flex-wrap">
+                                        <div>
+                                            <div class="fw-bold text-info">
+                                                {{ booking.availability.skill_name }}
+                                            </div>
+                                            <div class="small text-muted">
+                                                {{ booking.availability.date|date:"D, d M Y" }}
+                                            </div>
+                                            <div class="small">
+                                                Student: {{ booking.student.username }}
+                                            </div>
+                                        </div>
+
+                                        <div class="small fw-semibold">
+                                            🕒 {{ booking.availability.start_time|time:"g:i A" }} - 
+                                            {{ booking.availability.end_time|time:"g:i A" }}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+
+                                {% else %}
+
+                                    <h5 class="fw-bold mb-3">Completed Sessions</h5>
+                                    <p class="text-muted">No completed sessions yet.</p>
+
+                                {% endif %}
                         </div>
                     </div>
                 </div>
@@ -301,17 +449,42 @@ h4, h5 {
 
             <div class="mb-3">
                 <label class="small mb-1">GitHub URL</label>
-                <input type="url" name="github" class="form-control bg-dark border-secondary text-white" value="{{ profile.github_profile }}">
+                <input type="url" name="github_profile" class="form-control bg-dark border-secondary text-white" value="{{ profile.github_profile }}">
             </div>
 
             <div class="mb-3">
                 <label class="small mb-1">LinkedIn URL</label>
-                <input type="url" name="linkedin" class="form-control bg-dark border-secondary text-white" value="{{ profile.linkedin_profile }}">
+                <input type="url" name="linkedin_profile" class="form-control bg-dark border-secondary text-white" value="{{ profile.linkedin_profile }}">
             </div>
 
             <div class="mb-3">
                 <label class="small mb-1">Teaching Skills (Comma separated)</label>
                 <input type="text" name="tutoring_skills" class="form-control bg-dark border-secondary text-white" value="{{ profile.teaching_skills }}">
+            </div>
+
+            <div class="mb-3">
+                <label class="small mb-2">Technical Expertise</label>
+
+                <div class="mb-2">
+                    {% for skill in profile.skills.all %}
+                    <div class="form-check">
+                        <input class="form-check-input"
+                            type="checkbox"
+                            name="skills"
+                            value="{{ skill.name }}"
+                            id="skill_{{ forloop.counter }}"
+                            checked>
+                        <label class="form-check-label small" for="skill_{{ forloop.counter }}">
+                            {{ skill.name }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <input type="text"
+                    name="other_skills"
+                    class="form-control bg-dark border-secondary text-white mt-2"
+                    placeholder="Add a new skill">
             </div>
 
             {% comment %} <div class="mb-4">

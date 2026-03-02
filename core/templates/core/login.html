@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillLink | Login</title>
+    <title>SkillLink | Learner Login</title>
+
+    {% load static %}
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,105 +13,179 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    {% load static %}
     <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
 
     <style>
         body {
             font-family: 'Poppins', sans-serif;
+            background: #0f1115;
         }
+
+        .navbar {
+            background: rgba(15,17,21,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #4facfe 0%, #a29bfe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .access-card {
+            background: rgba(22, 24, 29, 0.95);
+            border-radius: 24px;
+            padding: 60px 45px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
         .label-accent {
             color: #93c5fd;
             font-weight: 600;
-            letter-spacing: 0.3px;
         }
+
+        .form-control {
+            background: #16181d;
+            border: 1px solid rgba(255,255,255,0.08);
+            color: white;
+            padding: 12px 20px;
+        }
+
+        .form-control:focus {
+            background: #16181d;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 0.2rem rgba(79,172,254,0.15);
+            color: white;
+        }
+
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #a29bfe 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px;
+        }
+
+        .primary-btn:hover {
+            opacity: 0.9;
+        }
+
         .helper-text {
             color: #cbd5e1;
             font-size: 0.9rem;
         }
-        .input-field::placeholder {
-            color: #9ca3af;
-            font-size: 0.95rem;
+
+        footer {
+            font-size: 0.8rem;
+            opacity: 0.5;
         }
     </style>
 </head>
 
-<body class="bg-dark text-white d-flex align-items-center justify-content-center min-vh-100">
+<body class="text-white d-flex flex-column min-vh-100">
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-7 col-lg-5">
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark fixed-top px-4">
+    <a class="navbar-brand d-flex align-items-center"
+       href="{% url 'index' %}">
+        <img src="{% static 'core/logo.png' %}" width="28" height="28" class="me-2">
+        <span class="text-gradient fw-bold">SkillLink</span>
+    </a>
 
-            <div class="card bg-dark border border-secondary rounded-5 shadow-lg p-5">
+    <a href="{% url 'index' %}" class="btn btn-sm btn-outline-light rounded-pill">
+        ← Back to Home
+    </a>
+</nav>
 
-                <!-- Header -->
-                <div class="text-center mb-4">
-                    <h2 class="text-gradient fw-bold mb-2">Welcome Back!</h2>
+<!-- MAIN CONTENT -->
+<div class="container flex-grow-1 d-flex align-items-center justify-content-center" style="padding-top:100px;">
+
+    <div class="col-md-7 col-lg-5">
+        <div class="access-card shadow-lg">
+
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h2 class="text-gradient fw-bold mb-2">Welcome Back!</h2>
+                <div class="text-center">    
                     <small class="helper-text">
-                        Get back to learning, building, and growing
+                        Continue your learning journey
                     </small>
                 </div>
+            </div>
 
-                <!-- LOGIN FORM -->
-                <form method="POST">
-                    {% csrf_token %}
+            <!-- LOGIN FORM -->
+            <form method="POST">
+                {% csrf_token %}
 
-                    <!-- EMAIL -->
-                    <div class="mb-4">
-                        <label class="label-accent mb-1 d-block">
-                            Email address
-                        </label>
-                        <input 
-                            type="email" 
-                            name="email" 
-                            class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field" 
-                            placeholder="Enter your registered email"
-                            value="{{ email|default:'' }}"
-                            required>
-                        {% if email_error %}
-                        <small class="text-danger">{{ email_error }}</small>
-                        {% endif %}
-                    </div>
+                <!-- EMAIL -->
+                <div class="mb-4">
+                    <label class="label-accent mb-2 d-block">
+                        Email address
+                    </label>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        class="form-control rounded-pill"
+                        placeholder="Enter your registered email"
+                        value="{{ email|default:'' }}"
+                        required>
 
-                    <!-- PASSWORD -->
-                    <div class="mb-4">
-                        <label class="label-accent mb-1 d-block">
-                            Passcode
-                        </label>
-                        <input 
-                            type="password" 
-                            name="password" 
-                            class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field" 
-                            placeholder="Enter your passcode"
-                            required>
-                        {% if pass_error %}
-                        <small class="text-danger">{{ pass_error }}</small>
-                        {% endif %}
-                    </div>
-
-                    <!-- CTA -->
-                    <button type="submit" class="btn btn-primary-custom w-100 rounded-pill shadow-lg py-2 fw-semibold">
-                        Log in
-                    </button>
-
-                </form>
-
-                <!-- Footer -->
-                <div class="text-center mt-4">
-                    <span class="helper-text">
-                        New to SkillLink?
-                    </span>
-                    <a href="{% url 'learn_login' %}?mode=signup" 
-                       class="ms-1 fw-semibold text-info text-decoration-none">
-                        Create an account
-                    </a>
+                    {% if email_error %}
+                    <small class="text-danger">{{ email_error }}</small>
+                    {% endif %}
                 </div>
 
+                <!-- PASSWORD -->
+                <div class="mb-3">
+                    <label class="label-accent mb-2 d-block">
+                        Passcode
+                    </label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        class="form-control rounded-pill"
+                        placeholder="Enter your passcode"
+                        required>
+
+                    {% if pass_error %}
+                    <small class="text-danger">{{ pass_error }}</small>
+                    {% endif %}
+                </div>
+
+
+                <!-- CTA -->
+                <button type="submit" class="btn primary-btn w-100 rounded-pill shadow-lg">
+                    Log in
+                </button>
+
+            </form>
+
+            <!-- Footer Section -->
+            <div class="text-center mt-4">
+                <span class="helper-text">
+                    New to SkillLink?
+                </span>
+                <a href="{% url 'learn_login' %}?mode=signup"
+                   class="ms-1 fw-semibold text-info text-decoration-none">
+                    Create an account
+                </a>
             </div>
 
         </div>
     </div>
+
 </div>
+
+<!-- FOOTER -->
+<footer class="text-center py-3 mt-auto">
+    © 2026 SkillLink • Secure authentication
+</footer>
 
 </body>
 </html>

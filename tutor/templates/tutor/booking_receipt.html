@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Booking Receipt | SkillLink</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+{% load static %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+background:#020617;
+color:white;
+font-family:Inter;
+}
+
+.receipt-card{
+background:linear-gradient(160deg,#0f172a,#020617);
+border:1px solid rgba(125,211,252,0.18);
+border-radius:20px;
+padding:30px;
+margin-top:80px;
+}
+
+.meet-link{
+color:#38bdf8;
+word-break:break-all;
+}
+
+.navbar-glass{
+background:rgba(15,23,42,0.7);
+backdrop-filter:blur(14px);
+border-bottom:1px solid rgba(125,211,252,0.15);
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.brand img{
+width:42px;
+height:42px;
+border-radius:50%;
+border:2px solid rgba(56,189,248,0.6);
+box-shadow:0 0 10px rgba(56,189,248,0.5);
+}
+
+.brand span{
+font-size:24px;
+font-weight:700;
+background: linear-gradient(90deg,#22d3ee,#6366f1,#8b5cf6);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+</style>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-glass px-4 py-3">
+
+<div class="brand">
+<img src="{% static 'core/logo.png' %}">
+<span>SkillLink</span>
+</div>
+
+<div class="ms-auto">
+<a href="{% url 'dashboard' %}" class="btn btn-outline-info btn-sm rounded-pill px-3">
+← Back to Dashboard
+</a>
+</div>
+
+</nav>
+
+<div class="container">
+
+<div class="receipt-card">
+
+<h3 class="mb-4">Booking Confirmed 🎉</h3>
+
+<p><strong>Tutor:</strong> {{ booking.tutor.user.first_name|default:booking.tutor.user.username }}</p>
+
+<p><strong>Student:</strong> {{ booking.student.username }}</p>
+
+<p><strong>Date:</strong> {{booking.availability.date}}</p>
+
+<p><strong>Time:</strong> {{ booking.availability.start_time }} — {{ booking.availability.end_time }}</p>
+
+<p><strong>Booked At:</strong> {{ booking.booked_at }}</p>
+
+<hr>
+
+<p><strong>Meeting Link:</strong></p>
+<p class="meet-link">
+<a href="{{ booking.meeting_link }}" target="_blank" class="meet-link">
+{{ booking.meeting_link }}
+</a>
+</p>
+
+<br>
+
+<a href="{% url 'tutor:download_receipt' booking.id %}" class="btn btn-primary">
+Download Receipt (.txt)
+</a>
+
+</div>
+
+</div>
+
+</body>
+</html>

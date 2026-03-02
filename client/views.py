@@ -10,6 +10,8 @@ import random
 from .models import ClientProfile
 from tutor.models import TutorProfile, Skill, Availability
 from django.db.models import Q
+from django.db.models.functions import Lower
+from django.db.models import Count
 
 
 from django.shortcuts import render, redirect
@@ -472,112 +474,81 @@ import random
 
 
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.db.models import Q, Count
+from tutor.models import TutorProfile, Skill
+from client.models import ClientProfile
+
+
 @login_required(login_url="client-login")
 def client_dashboard(request):
 
-    client_profile, created = ClientProfile.objects.get_or_create(
-    user=request.user
-    )
-
-    # ⭐ STOP LOOP HERE
-    if not client_profile.is_profile_complete:
+    # ---------- CLIENT PROFILE ----------
+    try:
+        client_profile = ClientProfile.objects.get(user=request.user)
+    except ClientProfile.DoesNotExist:
         return redirect("complete-profile")
 
 
     # ---------- SEARCH ----------
     search_query = request.GET.get('q', '')
-    search_by = request.GET.get('search_by') or 'Skill'.lower()
-    if TutorProfile:
-        tutors = TutorProfile.objects.all()
-    else:
-        tutors = TUTORS   # fake data
+    search_by = request.GET.get('search_by', 'skill').lower()
 
-
-    # tutors = TutorProfile.objects.all()
+    tutors = TutorProfile.objects.select_related("user").all()
 
     if search_query:
-        if search_by == 'name':
+
+        if search_by == "name":
             tutors = tutors.filter(
                 Q(user__first_name__icontains=search_query) |
                 Q(user__last_name__icontains=search_query) |
                 Q(user__email__icontains=search_query)
             )
 
-        elif search_by == 'skill':
+        elif search_by == "skill":
             tutors = tutors.filter(
                 skills__name__icontains=search_query
-            )
+            ).distinct()
 
 
-    # ---------- SKILL CARDS ----------
-#     skills = (
-#         TutorProfile.objects
-#         .values('skills')
-#         .annotate(total=Count('id'))
-#         .order_by('-total')
-#     )
+    # ---------- SKILL CARDS (CASE-INSENSITIVE, DISTINCT TUTOR COUNT) ----------
+    skill_names = Skill.objects.values_list("name", flat=True)
 
-     # ---------- STATS ----------
-#     total_jobs = JobPost.objects.filter(client=client_profile).count()
+    unique_skill_names = set(name.lower() for name in skill_names)
 
-#     total_applications = JobApplication.objects.filter(
-#         job__client=client_profile
-#     ).count()
+    skills = []
 
+    for skill_name in unique_skill_names:
 
-#         # Fake Data
-#     skills = [
-#     {"name": "Python", "total": 12},
-#     {"name": "UI/UX", "total": 7},
-#     {"name": "Machine Learning", "total": 5},
-#     {"name": "Java", "total": 9},
-# ]
-    # ---------- SKILL SOURCE SWITCH ----------
-
-    USE_FAKE_DATA = False  # ⭐ CHANGE THIS TO FALSE WHEN TUTOR APP ARRIVES
-    if USE_FAKE_DATA:
-        skills = [
-        {"skills": "Python", "total": 12},
-        {"skills": "UI/UX", "total": 7},
-        {"skills": "Machine Learning", "total": 5},
-        {"skills": "Java", "total": 9},
-        {"skills": "Cyber Security", "total": 4},
-        {"skills": "Data Science", "total": 6},
-    ]
-        # 🔥 SEARCH ON FAKE DATA
-        if search_query and search_by == "skill":
-            skills = [
-            skill for skill in skills
-            if search_query.lower() in skill["skills"].lower()
-        ]
-            
-    else:
-        from tutor.models import Skill
-
-        skills = (
-            Skill.objects
-            .annotate(total=Count("tutorprofile", distinct=True))
-            .filter(total__gt=0)
+        skill_variants = Skill.objects.filter(
+            name__iexact=skill_name
         )
 
-    skills = [
-    {"name": skill.name, "total": skill.total}
-    for skill in skills
-    ]
+        tutor_count = TutorProfile.objects.filter(
+            skills__in=skill_variants
+        ).distinct().count()
+
+        skill_obj = skill_variants.first()
+
+        if tutor_count > 0 and skill_obj:
+            skills.append({
+                "id": skill_obj.id,
+                "display_name": skill_name.capitalize(),
+                "total": tutor_count
+            })
+
 
     # ---------- CONTEXT ----------
     context = {
-        'client': client_profile,
-        # 'total_jobs': total_jobs,
-        # 'total_applications': total_applications,
-        'search_query': search_query,
-        'search_by': search_by,
-        'tutors': tutors,     # used for search results
-        'skills': skills      # used for dashboard cards
+        "client": client_profile,
+        "tutors": tutors,
+        "skills": skills,
+        "search_query": search_query,
+        "search_by": search_by,
     }
 
 
-    return render(request, 'client/dashboard.html', context)
+    return render(request, "client/dashboard.html", context)
 
     
     # try:
@@ -700,70 +671,32 @@ def complete_client_profile(request):
 
 
 # for fake data
+def skill_detail(request, skill_id):
 
-def skill_detail(request, skill_name):
+    skill = Skill.objects.get(id=skill_id)
 
-    USE_FAKE_DATA = False
     search_query = request.GET.get("search", "")
 
-    if USE_FAKE_DATA:
+    skill_variants = Skill.objects.filter(
+        name__iexact=skill.name
+    )
 
-        interns = [
-            {"id":1,"name": "Aarav Sharma", "skill": "python", "rating": 4.9},
-            {"id":2,"name": "Riya Patel", "skill": "python", "rating": 4.7},
-            {"id":3,"name": "Kabir Mehta", "skill": "java", "rating": 4.5},
-            {"id":4,"name": "Sneha Iyer", "skill": "Uiux", "rating": 4.8},
-            {"id":5,"name": "Kriti", "skill": "Uiux", "rating": 4.7},
-            {"id":6,"name": "Abhishek", "skill": "Uiux", "rating": 4.3},
-            {"id":7,"name": "Rohit", "skill": "Uiux", "rating": 4.2},
-            {"id":8,"name": "Arunita", "skill": "Uiux", "rating": 4.9},
-            {"id":9,"name": "Lakshmi", "skill": "Uiux", "rating": 5},
-            {"id":10,"name": "Jethalal", "skill": "Uiux", "rating": 4.3},
-            {"id":11,"name": "Tapu", "skill": "Uiux", "rating": 4.1},
-        ]
+    interns = TutorProfile.objects.filter(
+        skills__in=skill_variants
+    ).distinct()
 
-        interns = [
-            i for i in TUTORS
-            if i["skill"].lower() == skill_name.lower()
-        ]
+    if search_query:
+        interns = interns.filter(
+            user__first_name__icontains=search_query
+        )
 
-        if search_query:
-            interns = [
-                i for i in TUTORS
-                if search_query.lower() in i["name"].lower()
-            ]
+    interns = interns.order_by("-rating")
 
-        interns.sort(key=lambda x: x["rating"], reverse=True)
-
-    else:
-
-        interns = TutorProfile.objects.filter(
-            skills__name__icontains=skill_name
-        ).distinct()
-
-
-        if search_query:
-            interns = interns.filter(
-                user__first_name__icontains=search_query
-            )
-
-        interns = interns.order_by("-rating")
-    no_results = False
-
-    if search_query and len(interns) == 0:
-        no_results = True
-
-
-    context = {
-        "skill_name": skill_name.title(),
+    return render(request, "client/skill_detail.html", {
+        "skill": skill,
         "interns": interns,
         "search_query": search_query,
-        "total_candidates": len(interns) if USE_FAKE_DATA else interns.count(),
-        "no_results": no_results
-    }
-
-    return render(request, "client/skill_detail.html", context)
-
+    })
 
 def tutor_profile(request, id):
 
@@ -791,8 +724,8 @@ def tutor_profile(request, id):
                 "bio": tutor_obj.bio or "",
                 "skills": tutor_obj.skills.all(),
                 "rating": tutor_obj.rating or 0,
-                "linkedin": tutor_obj.linkedin or "",
-                "github": tutor_obj.github or "",
+                "linkedin_profile": tutor_obj.linkedin_profile or "",
+                "github_profile": tutor_obj.github_profile or "",
                 "availability": availability,
             }
         return render(request, "client/tutor_profile.html", {

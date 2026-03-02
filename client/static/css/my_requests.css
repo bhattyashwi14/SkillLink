@@ -121,3 +121,15 @@
 .empty-state p {
     color: #cfd6ff;
 }
+
+.card-actions{
+margin-top:15px;
+display:flex;
+justify-content:flex-end;
+}
+
+.view-profile-btn{
+padding:6px 14px;
+font-size:13px;
+border-radius:14px;
+}

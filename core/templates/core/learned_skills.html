@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Learning History | SkillLink</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+{% load static %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Inter;
+}
+
+.navbar-glass{
+background:rgba(15,23,42,0.7);
+backdrop-filter:blur(14px);
+border-bottom:1px solid rgba(125,211,252,0.15);
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.brand img{
+width:42px;
+height:42px;
+border-radius:50%;
+border:2px solid rgba(56,189,248,0.6);
+box-shadow:0 0 10px rgba(56,189,248,0.5);
+}
+
+.brand span{
+font-size:24px;
+font-weight:700;
+background: linear-gradient(90deg,#22d3ee,#6366f1,#8b5cf6);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+.page-title{
+margin-top:60px;
+text-align:center;
+font-size:32px;
+font-weight:700;
+color:#7dd3fc;
+}
+
+.history-card{
+margin-top:30px;
+background:linear-gradient(160deg,#0f172a,#020617);
+border:1px solid rgba(125,211,252,0.18);
+border-radius:22px;
+padding:25px;
+transition:0.35s;
+}
+
+.history-card:hover{
+transform:translateY(-6px);
+border-color:#38bdf8;
+box-shadow:0 20px 40px rgba(0,0,0,0.6);
+}
+
+.skill-title{
+font-size:20px;
+font-weight:600;
+color:#22d3ee;
+}
+
+.meta{
+font-size:14px;
+color:#94a3b8;
+margin-top:6px;
+}
+
+.tutor-name{
+color:#7dd3fc;
+font-weight:600;
+}
+
+.view-btn{
+margin-top:15px;
+background:linear-gradient(90deg,#22d3ee,#6366f1);
+border:none;
+padding:8px 18px;
+border-radius:12px;
+color:white;
+font-weight:500;
+text-decoration:none;
+display:inline-block;
+transition:0.3s;
+}
+
+.view-btn:hover{
+transform:scale(1.05);
+}
+
+.empty{
+margin-top:60px;
+text-align:center;
+color:#94a3b8;
+font-size:18px;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-glass px-4 py-3">
+
+<div class="brand">
+<img src="{% static 'core/logo.png' %}">
+<span>SkillLink</span>
+</div>
+
+<div class="ms-auto">
+<a href="{% url 'dashboard' %}" class="btn btn-outline-info btn-sm rounded-pill px-3">
+← Back to Dashboard
+</a>
+</div>
+
+</nav>
+
+<div class="container">
+
+<div class="page-title">
+Your Learning History 🎓
+</div>
+
+{% if bookings %}
+
+{% for booking in bookings %}
+
+<div class="history-card">
+
+<div class="skill-title">
+{{ booking.availability.skill_name }}
+</div>
+
+<div class="meta">
+👩‍🏫 Tutor:
+<span class="tutor-name">
+{{ booking.tutor.user.first_name|default:booking.tutor.user.username }}
+</span>
+</div>
+
+<div class="meta">
+📅 {{ booking.availability.date }}
+</div>
+
+<div class="meta">
+⏰ {{ booking.availability.start_time }} — {{ booking.availability.end_time }}
+</div>
+
+<a href="{% url 'tutor:tutor_public_profile' booking.tutor.user.id %}"
+   class="view-btn">
+View Tutor Profile
+</a>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="empty">
+No completed sessions yet.
+</div>
+
+{% endif %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

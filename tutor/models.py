@@ -8,6 +8,18 @@ class Skill(models.Model):
 
     def __str__(self):
         return self.name
+# from django.utils.text import slugify
+
+# class Skill(models.Model):
+#     name = models.CharField(max_length=100, unique=True)
+#     slug = models.SlugField(unique=True, blank=True)
+
+    
+#     def save(self, *args, **kwargs):
+#         if not self.slug:
+#             self.slug = slugify(self.name)
+#         super().save(*args, **kwargs)
+
 
 class TutorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='tutor_profile')
@@ -36,23 +48,26 @@ class TutorProfile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Tutor Profile"
 
+from django.db import models
+
 class Availability(models.Model):
-    DAYS = [
-        ('Monday', 'Monday'),
-        ('Tuesday', 'Tuesday'),
-        ('Wednesday', 'Wednesday'),
-        ('Thursday', 'Thursday'),
-        ('Friday', 'Friday'),
-        ('Saturday', 'Saturday'),
-        ('Sunday', 'Sunday'),
-    ]
-    tutor = models.ForeignKey(TutorProfile, on_delete=models.CASCADE, related_name='availabilities')
-    day_of_week = models.CharField(max_length=10, choices=DAYS)
+
+    tutor = models.ForeignKey(
+        TutorProfile,
+        on_delete=models.CASCADE,
+        related_name="availabilities"
+    )
+
+    skill_name = models.CharField(max_length=200)
+
+    date = models.DateField()   # ⭐ ADD THIS
+
     start_time = models.TimeField()
     end_time = models.TimeField()
 
-    class Meta:
-        verbose_name_plural = "Availabilities"
+    def __str__(self):
+        return f"{self.tutor.user.username} - {self.skill_name} - {self.date}"
+
 
 class Booking(models.Model):
     tutor = models.ForeignKey(
@@ -85,7 +100,35 @@ class Booking(models.Model):
         choices=STATUS_CHOICES,
         default="booked"
     )
+    meeting_link = models.URLField(blank=True, null=True)
+    def __str__(self):
+        return f"{self.student.username} → {self.tutor.user.username} ({self.availability.date})"
+
+
+class Review(models.Model):
+    booking = models.OneToOneField(
+        Booking,
+        on_delete=models.CASCADE,
+        related_name="review"
+    )
+
+    student = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="reviews_given"
+    )
+
+    tutor = models.ForeignKey(
+        TutorProfile,
+        on_delete=models.CASCADE,
+        related_name="reviews_received"
+    )
+
+    rating = models.IntegerField()  # 1 to 5
+
+    review_text = models.TextField(blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.student.username} → {self.tutor.user.username} ({self.availability.day_of_week})"
-
+        return f"{self.student.username} rated {self.tutor.user.username} ({self.rating}/5)"

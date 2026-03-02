@@ -24,7 +24,7 @@
                 placeholder="Search interns or skills..."
                 value="{{ search_query }}"
             >
-
+            
            <div class="custom-dropdown">
 
     <!-- Selected / Placeholder -->
@@ -54,7 +54,8 @@
 
 
         </form>
-
+        <a href="{% url 'my_requests' %}" class="edit-btn">My requests
+    </a>
         <a href="{% url 'complete-profile' %}" class="edit-btn">
             Edit Profile
         </a>
@@ -203,15 +204,16 @@
 <div class="skills-grid">
   {% for skill in skills %}
 
-<a href="{% url 'skill-detail' skill.name|slugify %}" class="skill-card">
+<a href="{% url 'skill-detail' skill.id %}" class="skill-card">
 
    
-         {% comment %} background-image:url('https://source.unsplash.com/600x400/?{{ skill.name|slugify }},technology'); {% endcomment %}
-    <img src="https://tse1.mm.bing.net/th?q={{ skill.name|lower }}+software+development+coding&pid=Api"
+         {% comment %} background-image:url('https://source.unsplash.com/600x400/?{{ skill.display_name }}
+|slugify }},technology'); {% endcomment %}
+    <img src="https://tse1.mm.bing.net/th?q={{ skill.display_name }}+software+development+coding&pid=Api"
      class="skill-img">
 
     <div class="skill-overlay">
-        <h3>{{ skill.name }}</h3>
+        <h3>{{ skill.display_name }}</h3>
         <p>{{ skill.total }} Interns Available</p>
     </div>
 
@@ -220,7 +222,7 @@
 
 {% comment %} <div class="skill-card"> may be add later {% endcomment %}
 
-  {% comment %} <h4>{{ skill.name }}</h4>
+  {% comment %} <h4>{{ skill.display_name }}</h4>
 <p>{{ skill.total }} interns available</p> {% endcomment %}
   
   {% comment %} <h4>{{ skill.skills }}</h4>
@@ -307,4 +309,3 @@ document.addEventListener("mouseup", () => {
 }); 
 </script>
 {% endblock %}
-

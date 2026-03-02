@@ -12,6 +12,20 @@ urlpatterns = [
     views.upcoming_sessions,
     name="upcoming_sessions"
     ),
+    path(
+    "mark-completed/<int:booking_id>/",
+    views.mark_completed,
+    name="mark_completed"
+    ),
+
+    path(
+        "add-review/<int:booking_id>/",
+        views.add_review,
+        name="add_review"
+    ),
+
+    path('learned-skills/', views.learned_skills, name='learned_skills'),
+    path("chatbot-response/", views.chatbot_response, name="chatbot_response"),
 
 
 ]

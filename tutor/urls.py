@@ -41,10 +41,37 @@ urlpatterns = [
 
 
     # ⭐ SLOT SYSTEM
-    path('slots/<int:tutor_id>/', views.tutor_slots, name='tutor_slots'),
+    path("slots/<int:tutor_id>/<str:skill_name>/", views.tutor_slots, name="tutor_slots"),
+    path('slot/edit/<int:slot_id>/', views.edit_slot, name='edit_slot'),
+    path('slot/add/', views.add_slot, name='add_slot'),
+    path("sessions/history/", views.session_history, name="session_history"),
     path('book-slot/<int:slot_id>/', views.book_slot, name='book_slot'),
-    path('logout/', LogoutView.as_view(next_page='tutor:tutor_login'), name='logout')
+    path('booking-receipt/<int:booking_id>/', views.booking_receipt, name='booking_receipt'),
+    path('download-receipt/<int:booking_id>/', views.download_receipt, name='download_receipt'),
+    path('logout/', LogoutView.as_view(next_page='tutor:tutor_login'), name='logout'),
+    path(
+        'notifications/',
+        views.tutor_notifications,
+        name='tutor_notifications'
+    ),
 
+    path(
+        'accept/<int:request_id>/',
+        views.accept_request,
+        name='accept_request'
+    ),
+
+    path(
+        'reject/<int:request_id>/',
+        views.reject_request,
+        name='reject_request'
+    ),
+
+    path(
+    'company/<int:user_id>/',
+    views.company_profile,
+    name='company_profile'
+    ),
 
 ]
 

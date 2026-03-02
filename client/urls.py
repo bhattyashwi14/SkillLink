@@ -20,7 +20,12 @@ urlpatterns = [
     views.complete_client_profile,
     name="complete-profile"
 ),
-path("skills/<slug:skill_name>/", views.skill_detail, name="skill-detail"),
+# path('tutor/<int:tutor_id>/', views.tutor_profile, name='tutor_profile')
+path('tutor/<int:id>/', views.tutor_profile, name='tutor_profile'),
+path('hire/<int:tutor_id>/', views.hire_tutor, name='hire_tutor'),
+path("request-success/", views.request_success, name="request_success"),
+path("my-requests/", views.my_requests, name="my_requests"),
+path("skills/<int:skill_id>/", views.skill_detail, name="skill-detail"),
 # path('tutor/<int:tutor_id>/', views.tutor_profile, name='tutor_profile')
 path('tutor/<int:id>/', views.tutor_profile, name='tutor_profile'),
 path('hire/<int:tutor_id>/', views.hire_tutor, name='hire_tutor'),

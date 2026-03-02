@@ -101,18 +101,18 @@ class EmailOTP(models.Model):
     def __str__(self):
         return f"{self.user.email} - {self.otp}"
     
-class TutorProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    skills = models.TextField()
-    experience = models.CharField(max_length=100)
-    resume = models.FileField(upload_to='tutor_resumes/', blank=True, null=True)
-    portfolio_link = models.URLField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+# class TutorProfile(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     skills = models.TextField()
+#     experience = models.CharField(max_length=100)
+#     resume = models.FileField(upload_to='tutor_resumes/', blank=True, null=True)
+#     portfolio_link = models.URLField(blank=True, null=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
 
-    #
+#     #
 
-    def __str__(self):
-        return self.user.username
+#     def __str__(self):
+#         return self.user.username
 
 class JobPost(models.Model):
     client = models.ForeignKey(ClientProfile, on_delete=models.CASCADE)
@@ -187,7 +187,7 @@ class HiringRequest(models.Model):
     )
 
     tutor = models.ForeignKey(
-        'TutorProfile',
+        'tutor.TutorProfile',
         on_delete=models.CASCADE,
         related_name='received_hiring_requests'
     )

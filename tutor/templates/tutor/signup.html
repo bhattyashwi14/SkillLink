@@ -5,174 +5,222 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkillLink | Create Account</title>
 
+    {% load static %}
+
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    {% load static %}
     <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
 
     <style>
         body {
             font-family: 'Poppins', sans-serif;
+            background: #0f1115;
         }
+
+        .navbar {
+            background: rgba(15,17,21,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #4facfe 0%, #a29bfe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .access-card {
+            background: rgba(22, 24, 29, 0.95);
+            border-radius: 24px;
+            padding: 60px 45px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
         .label-accent {
             color: #7dd3fc;
             font-weight: 600;
-            letter-spacing: 0.3px;
         }
-        .input-field::placeholder {
+
+        .form-control {
+            background: #16181d;
+            border: 1px solid rgba(255,255,255,0.08);
+            color: white;
+            padding: 12px 20px;
+        }
+
+        .form-control:focus {
+            background: #16181d;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 0.2rem rgba(79,172,254,0.15);
+            color: white;
+        }
+
+        .form-control::placeholder {
             color: #9ca3af;
-            font-size: 0.95rem;
+        }
+
+        footer {
+            font-size: 0.8rem;
+            opacity: 0.5;
         }
     </style>
 </head>
 
-<body class="bg-dark text-white d-flex align-items-center justify-content-center min-vh-100">
+<body class="text-white d-flex flex-column min-vh-100">
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-7 col-lg-5">
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark fixed-top px-4">
+    <a class="navbar-brand d-flex align-items-center"
+       href="{% url 'index' %}">
+        <img src="{% static 'core/logo.png' %}" width="28" height="28" class="me-2">
+        <span class="text-gradient fw-bold">SkillLink</span>
+    </a>
 
-            <div class="card bg-dark border border-secondary rounded-5 shadow-lg p-5">
-                
-                <!-- Header -->
-                <div class="text-center mb-4">
-                    <h2 class="text-gradient fw-bold mb-2">Create your SkillLink account</h2>
-                    <p class="text-muted mb-1">
-                        Start learning, building skills, and unlocking opportunities
-                    </p>
-                    <small class="text-muted">
-                        This will take less than a minute
-                    </small>
-                </div>
+    <a href="{% url 'index' %}" class="btn btn-sm btn-outline-light rounded-pill">
+        ← Back to Home
+    </a>
+</nav>
 
-                <!-- FORM -->
-                <form method="POST" novalidate>
-                    {% csrf_token %}
+<!-- MAIN CONTENT -->
+<div class="container flex-grow-1 d-flex align-items-center justify-content-center" style="padding-top:100px;">
 
-                    <!-- EMAIL STEP -->
-                    <div class="mb-4">
-                        <label class="label-accent mb-1 d-block">Email address</label>
+    <div class="col-md-7 col-lg-5">
 
-                        <input type="email" name="email"
-                            value="{{ email|default:'' }}"
-                            class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field"
-                            placeholder="Enter your email"
-                            required>
+        <div class="access-card shadow-lg">
 
-                        {% if email_error %}
-                        <small class="text-danger">{{ email_error }}</small>
-                        {% endif %}
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h2 class="text-gradient fw-bold mb-2">Create your SkillLink account</h2>
+            </div>
 
-                        {% if not show_otp and not show_password %}
-                        <button type="submit" name="action" value="send_otp"
-                            class="btn btn-info w-100 mt-3 rounded-pill">
-                            Send OTP
-                        </button>
-                        {% endif %}
-                    </div>
+            <!-- FORM -->
+            <form method="POST" novalidate>
+                {% csrf_token %}
 
+                <!-- EMAIL STEP -->
+                <div class="mb-4">
+                    <label class="label-accent mb-1 d-block">Email address</label>
 
-                    <!-- OTP STEP -->
-                    {% if show_otp %}
-                    <div class="mb-4">
-                        <label class="label-accent mb-1 d-block">Enter OTP</label>
+                    <input type="email" name="email"
+                        value="{{ email|default:'' }}"
+                        class="form-control rounded-pill"
+                        placeholder="Enter your email"
+                        required>
 
-                        <input type="text" name="otp"
-                            class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field"
-                            placeholder="Enter 6 digit OTP"
-                            value="{{ otp|default:'' }}"
-                            required>
-
-                        {% if otp_error %}
-                        <small class="text-danger">{{ otp_error }}</small>
-                        {% endif %}
-                        {% if otp_success %}
-                        <small class="text-success mt-1 d-block">
-                            {{ otp_success }}
-                        </small>
-                        {% endif %}
-
-
-                        {% if not show_password %}
-                        <button type="submit" name="action" value="verify_otp"
-                            class="btn btn-info w-100 mt-3 rounded-pill">
-                            Verify OTP
-                        </button>
-
-                        <button type="submit" name="action" value="resend_otp"
-                            class="btn btn-link text-info w-100">
-                            Resend OTP
-                        </button>
-                        {% endif %}
-                    </div>
+                    {% if email_error %}
+                    <small class="text-danger">{{ email_error }}</small>
                     {% endif %}
 
-
-                    <!-- PASSWORD STEP -->
-                    {% if show_password %}
-                    <div class="mb-4">
-                        <label class="label-accent mb-1 d-block">Create Passcode</label>
-
-                        <input type="password" name="password"
-                            class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field"
-                            placeholder="Min 8 chars, 1 capital, 1 number, 1 special"
-                            required>
-
-                        {% if pass_error %}
-                        <small class="text-danger">{{ pass_error }}</small>
-                        {% endif %}
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="label-accent mb-1 d-block">Confirm Passcode</label>
-
-                        <input type="password" name="confirm_password"
-                            class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field"
-                            placeholder="Re-enter passcode"
-                            required>
-
-                        {% if match_error %}
-                        <small class="text-danger">{{ match_error }}</small>
-                        {% endif %}
-                    </div>
-
-                    <button type="submit" name="action" value="create_account"
-                        class="btn btn-primary w-100 rounded-pill">
-                        Create Account
+                    {% if not show_otp and not show_password %}
+                    <button type="submit" name="action" value="send_otp"
+                        class="btn btn-info w-100 mt-3 rounded-pill">
+                        Send OTP
                     </button>
                     {% endif %}
-
-
-                    {% if success %}
-                    <div class="alert alert-success mt-3">
-                        {{ success }}
-                    </div>
-                    {% endif %}
-                </form>
-
-
-                <!-- Footer -->
-                <div class="text-center mt-4">
-                    <p class="text-secondary mb-1" style="font-size: 0.95rem;">
-                        Already have an account?
-                    </p>
-                    <a href="{% url 'tutor:tutor_login' %}" 
-                        class="fw-semibold text-info text-decoration-none"
-                        style="font-size: 0.95rem;">
-                            Log in
-                    </a>
                 </div>
 
+                <!-- OTP STEP -->
+                {% if show_otp %}
+                <div class="mb-4">
+                    <label class="label-accent mb-1 d-block">Enter OTP</label>
 
+                    <input type="text" name="otp"
+                        class="form-control rounded-pill"
+                        placeholder="Enter 6 digit OTP"
+                        value="{{ otp|default:'' }}"
+                        required>
+
+                    {% if otp_error %}
+                    <small class="text-danger">{{ otp_error }}</small>
+                    {% endif %}
+                    {% if otp_success %}
+                    <small class="text-success mt-1 d-block">
+                        {{ otp_success }}
+                    </small>
+                    {% endif %}
+
+                    {% if not show_password %}
+                    <button type="submit" name="action" value="verify_otp"
+                        class="btn btn-info w-100 mt-3 rounded-pill">
+                        Verify OTP
+                    </button>
+
+                    <button type="submit" name="action" value="resend_otp"
+                        class="btn btn-link text-info w-100">
+                        Resend OTP
+                    </button>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- PASSWORD STEP -->
+                {% if show_password %}
+                <div class="mb-4">
+                    <label class="label-accent mb-1 d-block">Create Passcode</label>
+
+                    <input type="password" name="password"
+                        class="form-control rounded-pill"
+                        placeholder="Min 8 chars, 1 capital, 1 number, 1 special"
+                        required>
+
+                    {% if pass_error %}
+                    <small class="text-danger">{{ pass_error }}</small>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="label-accent mb-1 d-block">Confirm Passcode</label>
+
+                    <input type="password" name="confirm_password"
+                        class="form-control rounded-pill"
+                        placeholder="Re-enter passcode"
+                        required>
+
+                    {% if match_error %}
+                    <small class="text-danger">{{ match_error }}</small>
+                    {% endif %}
+                </div>
+
+                <button type="submit" name="action" value="create_account"
+                    class="btn btn-primary w-100 rounded-pill">
+                    Create Account
+                </button>
+                {% endif %}
+
+                {% if success %}
+                <div class="alert alert-success mt-3">
+                    {{ success }}
+                </div>
+                {% endif %}
+            </form>
+
+            <!-- Footer -->
+            <div class="text-center mt-4">
+                <p class="text-secondary mb-1" style="font-size: 0.95rem;">
+                    Already have an account?
+                </p>
+                <a href="{% url 'tutor:tutor_login' %}" 
+                    class="fw-semibold text-info text-decoration-none"
+                    style="font-size: 0.95rem;">
+                        Log in
+                </a>
             </div>
 
         </div>
+
     </div>
+
 </div>
+
+<!-- FOOTER -->
+<footer class="text-center py-3 mt-auto">
+    © 2026 SkillLink • Secure authentication
+</footer>
 
 </body>
 </html>

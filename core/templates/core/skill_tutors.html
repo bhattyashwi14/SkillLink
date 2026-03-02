@@ -8,6 +8,8 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+{% load static %}
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -129,11 +131,53 @@ transition:0.3s;
 transform:scale(1.05);
 }
 
+.navbar-glass{
+background:rgba(15,23,42,0.7);
+backdrop-filter:blur(14px);
+border-bottom:1px solid rgba(125,211,252,0.15);
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.brand img{
+width:42px;
+height:42px;
+border-radius:50%;
+border:2px solid rgba(56,189,248,0.6);
+box-shadow:0 0 10px rgba(56,189,248,0.5);
+}
+
+.brand span{
+font-size:24px;
+font-weight:700;
+background: linear-gradient(90deg,#22d3ee,#6366f1,#8b5cf6);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
 </style>
 
 </head>
 
 <body>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-glass px-4 py-3">
+
+<div class="brand">
+<img src="{% static 'core/logo.png' %}">
+<span>SkillLink</span>
+</div>
+
+<div class="ms-auto">
+<a href="{% url 'dashboard' %}" class="btn btn-outline-info btn-sm rounded-pill px-3">
+← Back to Dashboard
+</a>
+</div>
+</nav>
 
 <div class="container">
 
@@ -166,15 +210,34 @@ Connect with verified tutors teaching {{ skill.name }}
 </div>
 
 <div class="rating">
+   {% if tutor.is_approved %}
+      <span class="badge bg-success">Verified Tutor</span>
+   {% endif %}
 ⭐ {{ tutor.rating|floatformat:1 }}
 </div>
 </div>
 
 </div>
 
-<div class="skill-chip">
+{% comment %} <div class="skill-chip">
 {{ skill.name }} Specialist
+</div> {% endcomment %}
+
+<div class="skill-chip">
+   A little insight about me:
+   <br>
+   {{ tutor.bio|default:"Experienced tutor ready to guide you."|truncatechars:80 }}
 </div>
+
+
+{% comment %} <p class="small text-muted mb-2">
+    {{ tutor.bio|default:"Experienced tutor ready to guide you."|truncatechars:80 }}
+</p>
+
+{% if tutor.is_approved %}
+    <span class="badge bg-success">✔ Verified Tutor</span>
+{% endif %} {% endcomment %}
+
 
 <div class="d-flex gap-2 mt-3">
 
@@ -184,14 +247,13 @@ Connect with verified tutors teaching {{ skill.name }}
 View Profile
 </a>
 
-<a href="{% url 'tutor:tutor_slots' tutor.id %}" 
+<a href="{% url 'tutor:tutor_slots' tutor.id skill_name %}"
    class="book-btn text-decoration-none"
    style="flex:1; text-align:center;">
 Book Slot
 </a>
 
 </div>
-
 
 
 </div>

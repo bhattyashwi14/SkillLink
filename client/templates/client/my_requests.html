@@ -5,11 +5,13 @@
 <link rel="stylesheet" href="{% static 'css/my_requests.css' %}">
 
 <div class="requests-page">
-
+    <a href="{% url 'client-dashboard' %}" class="glass-btn"> Go to Dashboard
+    </a>
     <h1 class="page-title">My Hiring Requests</h1>
     <p class="page-subtitle">
         Track all the tutors you’ve contacted and their responses.
     </p>
+    
 
     <div class="requests-grid">
 
@@ -17,7 +19,9 @@
         <div class="request-card glass">
 
             <div class="card-header">
-                <h3 class="tutor-name">{{ req.tutor.name }}</h3>
+                <h3 class="tutor-name">
+                    {{ req.tutor.user.get_full_name|default:req.tutor.user.username }}
+                </h3>
                 <span class="status {{ req.status|lower }}">
                     {{ req.status }}
                 </span>
@@ -34,6 +38,13 @@
                 <p class="description">
                     {{ req.description|truncatechars:90 }}
                 </p>
+            </div>
+
+            <div class="card-actions">
+                <a href="{% url 'tutor:tutor_public_profile' req.tutor.user.id %}"
+                class="glass-btn view-profile-btn">
+                    View Profile
+                </a>
             </div>
 
         </div>

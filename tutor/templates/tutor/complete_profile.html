@@ -38,7 +38,6 @@
             margin-right: 10px;
             cursor: pointer;
         }
-        /* Custom Styling for Checkboxes */
         .skill-checkbox-group {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -58,348 +57,247 @@
             font-size: 0.9rem;
             cursor: pointer;
         }
-        {% comment %} .weekly-days label {
-            color: #ffffff;
-        } {% endcomment %}
-        /* Style for Day Selection Pills */
-.day-checkbox {
-    display: none; /* Keep hidden, we style the label instead */
-}
 
-.day-label {
-    display: inline-block;
-    padding: 10px 20px;
-    margin: 8px; /* Increased spacing between pills */
-    border-radius: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.05);
-    color: #cbd5e1;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-align: center;
-    min-width: 70px; /* Ensures all pills are a similar size */
-}
-
-/* Hover effect */
-.day-label:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: #93c5fd;
-}
-
-/* Checked state: This lights up the pill when selected */
-.day-checkbox:checked + .day-label {
-    background: linear-gradient(45deg, #6366f1, #0ea5e9); /* Uses your theme colors */
-    border-color: transparent;
-    color: white;
-    box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
-    transform: translateY(-2px);
-}
-
+        .slot-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 
 <body class="bg-dark text-white d-flex align-items-center justify-content-center min-vh-100 py-5">
 
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-9 col-lg-7">
+<div class="row justify-content-center">
+<div class="col-md-9 col-lg-7">
 
-            <div class="card bg-dark border border-secondary rounded-5 shadow-lg p-5">
+<div class="card bg-dark border border-secondary rounded-5 shadow-lg p-5">
 
-                <div class="text-center mb-5">
-                    <h2 class="text-gradient fw-bold mb-2">Final Step!</h2>
-                    <p class="helper-text">Setup your tutor identity to start connecting with students</p>
-                </div>
+<div class="text-center mb-5">
+<h2 class="text-gradient fw-bold mb-2">Final Step!</h2>
+<p class="helper-text">Setup your tutor identity to start connecting with students</p>
+</div>
 
-                <form method="POST" enctype="multipart/form-data" novalidate>
-                    {% csrf_token %}
+<form method="POST" enctype="multipart/form-data" novalidate>
+{% csrf_token %}
 
-                    <div class="mb-4">
-                        <label class="label-accent mb-1 d-block small">Full Name</label>
-                        <input type="text" name="full_name" class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field" placeholder="Enter your full name" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="label-accent mb-1 d-block small">Short Bio</label>
-                        <textarea name="bio" rows="3" class="form-control bg-dark text-white border-secondary rounded-4 px-4 py-3 input-field" placeholder="Tell students about your teaching style..."></textarea>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="label-accent mb-2 d-block small">Technical Skills</label>
-                        <div class="skill-checkbox-group">
-                            <div class="row g-2">
-                                <div class="col-6 col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="skills" value="Python" id="skill_1">
-                                        <label class="form-check-label" for="skill_1">Python</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="skills" value="Java" id="skill_2">
-                                        <label class="form-check-label" for="skill_2">Java</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="skills" value="JavaScript" id="skill_3">
-                                        <label class="form-check-label" for="skill_3">JavaScript</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="skills" value="C++" id="skill_4">
-                                        <label class="form-check-label" for="skill_4">C++</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="skills" value="React" id="skill_5">
-                                        <label class="form-check-label" for="skill_5">React</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="skills" value="Django" id="skill_6">
-                                        <label class="form-check-label" for="skill_6">Django</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="skills" value="Node.js" id="skill_7">
-                                        <label class="form-check-label" for="skill_7">Node.js</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="skills" value="SQL" id="skill_8">
-                                        <label class="form-check-label" for="skill_8">SQL</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="skills" value="UI/UX" id="skill_9">
-                                        <label class="form-check-label" for="skill_9">UI/UX</label>
-                                    </div>
-                                </div>
-
-                                <div class="col-6 col-sm-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="skill_other_toggle" onchange="toggleOtherField()">
-                                        <label class="form-check-label" for="skill_other_toggle">Other</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="other_skill_div" class="mt-3" style="display: none;">
-                                <input type="text" name="other_skills" id="other_skill_input" class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field" placeholder="Specify other skills (comma separated)">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="label-accent mb-1 d-block small">What can you teach?</label>
-                        <input type="text" name="tutoring_skills" class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field" placeholder="e.g. Data Structures, Web Design, Calculus">
-                    </div>
-
-                    <div class="mb-5">
-                        <label class="label-accent mb-1 d-block small">Proof of Skills (Portfolio/Sample)</label>
-                        <p class="text-muted" style="font-size: 0.75rem;">Upload a PDF or ZIP containing samples of your work</p>
-                        <input type="file" name="proof_file" class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field">
-                    </div>
+<!-- NAME -->
 <div class="mb-4">
-    <label class="label-accent mb-3 d-block small text-center">Weekly Availability (Days)</label>
-    <div class="d-flex flex-wrap justify-content-center p-2">
-        
-        <input type="checkbox" name="available_days" value="Monday" id="day_Mon" class="day-checkbox">
-        <label for="day_Mon" class="day-label">Mon</label>
+<label class="label-accent mb-1 d-block small">Full Name</label>
+<input type="text" name="full_name"
+class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field"
+placeholder="Enter your full name" required>
+</div>
 
-        <input type="checkbox" name="available_days" value="Tuesday" id="day_Tue" class="day-checkbox">
-        <label for="day_Tue" class="day-label">Tue</label>
+<!-- BIO -->
+<div class="mb-4">
+<label class="label-accent mb-1 d-block small">Short Bio</label>
+<textarea name="bio" rows="3"
+class="form-control bg-dark text-white border-secondary rounded-4 px-4 py-3 input-field"
+placeholder="Tell students about your teaching style..."></textarea>
+</div>
 
-        <input type="checkbox" name="available_days" value="Wednesday" id="day_Wed" class="day-checkbox">
-        <label for="day_Wed" class="day-label">Wed</label>
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <label class="label-accent mb-1 d-block small">LinkedIn Profile URL</label>
+        <input type="url" name="linkedin_profile"
+            class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field"
+            placeholder="https://linkedin.com/in/...">
+    </div>
 
-        <input type="checkbox" name="available_days" value="Thursday" id="day_Thu" class="day-checkbox">
-        <label for="day_Thu" class="day-label">Thu</label>
-
-        <input type="checkbox" name="available_days" value="Friday" id="day_Fri" class="day-checkbox">
-        <label for="day_Fri" class="day-label">Fri</label>
-
-        <input type="checkbox" name="available_days" value="Saturday" id="day_Sat" class="day-checkbox">
-        <label for="day_Sat" class="day-label">Sat</label>
-
-        <input type="checkbox" name="available_days" value="Sunday" id="day_Sun" class="day-checkbox">
-        <label for="day_Sun" class="day-label">Sun</label>
-
+    <div class="col-md-6 mb-4">
+        <label class="label-accent mb-1 d-block small">GitHub Portfolio URL</label>
+        <input type="url" name="github_profile"
+            class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field"
+            placeholder="https://github.com/...">
     </div>
 </div>
 
-                    <div class="row mb-4">
-                        <div class="col-md-6 mb-3">
-                            <label class="label-accent mb-1 d-block small">Typical Start Time</label>
-                            <input type="time" name="start_time" class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field" required>
-                            <small class="text-muted" style="font-size: 0.7rem;">When do you usually start?</small>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="label-accent mb-1 d-block small">Typical End Time</label>
-                            <input type="time" name="end_time" class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field" required>
-                            <small class="text-muted" style="font-size: 0.7rem;">When do you wrap up?</small>
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <label class="label-accent mb-1 d-block small">LinkedIn Profile URL</label>
-                            <input type="url" name="linkedin" class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field" placeholder="https://linkedin.com/in/...">
-                        </div>
-                        <div class="col-md-6 mb-4">
-                            <label class="label-accent mb-1 d-block small">GitHub Portfolio URL</label>
-                            <input type="url" name="github" class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field" placeholder="https://github.com/...">
-                        </div>
-                    </div>
+<!-- VERIFICATION PROOF -->
+<div class="mb-4">
+    <label class="label-accent mb-1 d-block small">
+        Upload Skill Verification Proof
+    </label>
 
-                    <button type="submit" class="btn btn-primary-custom w-100 rounded-pill shadow-lg py-3 fw-bold">
-                        Finish Onboarding & Enter Dashboard
-                    </button>
+    <input type="file"
+           name="proof_file"
+           class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field">
 
-                </form>
-
-            </div>
-
-        </div>
-    </div>
+    <small class="helper-text">
+        Upload certificate, portfolio PDF, or any proof of expertise (optional)
+    </small>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    function toggleOtherField() {
-        const otherDiv = document.getElementById('other_skill_div');
-        const otherCheckbox = document.getElementById('skill_other_toggle');
-        const otherInput = document.getElementById('other_skill_input');
-        
-        if (otherCheckbox.checked) {
-            otherDiv.style.display = 'block';
-            otherInput.focus();
-        } else {
-            otherDiv.style.display = 'none';
-            otherInput.value = ''; // Clear input if unchecked
-        }
-    }
-</script>
-</body>
-</html> 
-{% comment %} <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillLink | Complete Profile</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- SKILLS -->
+<div class="mb-4">                                                                                                  
+<label class="label-accent mb-2 d-block small">Technical Skills</label>
+<div class="skill-checkbox-group">
+<div class="row g-2">
 
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+<div class="col-6 col-sm-4">
+<div class="form-check">
+<input class="form-check-input" type="checkbox" name="skills" value="Python" id="skill_1">
+<label class="form-check-label" for="skill_1">Python</label>
+</div>
+</div>
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: radial-gradient(circle at top right, #1a1a3a, #0b0b1a);
-        }
-        .label-accent {
-            color: #93c5fd;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-        }
-        .helper-text {
-            color: #cbd5e1;
-            font-size: 0.9rem;
-        }
-        .input-field::placeholder {
-            color: #9ca3af;
-            font-size: 0.95rem;
-        }
-        /* Custom styling for file input to match your theme */
-        .input-field[type="file"]::-webkit-file-upload-button {
-            background: var(--purple);
-            border: none;
-            color: white;
-            padding: 4px 15px;
-            border-radius: 50px;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-    </style>
-</head>
+<div class="col-6 col-sm-4">
+<div class="form-check">
+<input class="form-check-input" type="checkbox" name="skills" value="Java" id="skill_2">
+<label class="form-check-label" for="skill_2">Java</label>
+</div>
+</div>
 
-<body class="bg-dark text-white d-flex align-items-center justify-content-center min-vh-100 py-5">
+<div class="col-6 col-sm-4">
+<div class="form-check">
+<input class="form-check-input" type="checkbox" name="skills" value="JavaScript" id="skill_3">
+<label class="form-check-label" for="skill_3">JavaScript</label>
+</div>
+</div>
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-9 col-lg-7">
+<div class="col-6 col-sm-4">
+<div class="form-check">
+<input class="form-check-input" type="checkbox" name="skills" value="C++" id="skill_4">
+<label class="form-check-label" for="skill_4">C++</label>
+</div>
+</div>
 
-            <div class="card bg-dark border border-secondary rounded-5 shadow-lg p-5">
+<div class="col-6 col-sm-4">
+<div class="form-check">
+<input class="form-check-input" type="checkbox" name="skills" value="React" id="skill_5">
+<label class="form-check-label" for="skill_5">React</label>
+</div>
+</div>
 
-                <div class="text-center mb-5">
-                    <h2 class="text-gradient fw-bold mb-2">Final Step!</h2>
-                    <p class="helper-text">Setup your tutor identity to start connecting with students</p>
+<div class="col-6 col-sm-4">
+<div class="form-check">
+<input class="form-check-input" type="checkbox" name="skills" value="Django" id="skill_6">
+<label class="form-check-label" for="skill_6">Django</label>
+</div>
+</div>
+
+<div class="col-6 col-sm-4">
+<div class="form-check">
+<input class="form-check-input" type="checkbox" name="skills" value="Node.js" id="skill_7">
+<label class="form-check-label" for="skill_7">Node.js</label>
+</div>
+</div>
+
+<div class="col-6 col-sm-4">
+<div class="form-check">
+<input class="form-check-input" type="checkbox" name="skills" value="SQL" id="skill_8">
+<label class="form-check-label" for="skill_8">SQL</label>
+</div>
+</div>
+
+<div class="col-6 col-sm-4">
+<div class="form-check">
+<input class="form-check-input" type="checkbox" name="skills" value="UI/UX" id="skill_9">
+<label class="form-check-label" for="skill_9">UI/UX</label>
+</div>
+</div>
+
+</div>
+
+<div id="other_skill_div" class="mt-3">
+<input type="text" name="other_skills"
+class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field"
+placeholder="Specify other skills (comma separated)">
+</div>
+
+</div>
+</div>
+
+<!-- WHAT CAN YOU TEACH -->
+<div class="mb-4">
+<label class="label-accent mb-1 d-block small">What can you teach?</label>
+<input type="text" name="tutoring_skills"
+class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field"
+placeholder="e.g. Data Structures, Web Design, Calculus">
+</div>
+
+<!-- MULTI SLOT SECTION -->
+<div class="mb-4">
+    <label class="label-accent mb-3 d-block small text-center">
+        Available Session Slots
+    </label>
+
+    <div id="slots-container">
+
+        <div class="slot-card p-3 mb-3"
+             style="background: rgba(255,255,255,0.05);
+                    border-radius: 15px;
+                    border: 1px solid rgba(255,255,255,0.1);">
+
+            <label class="label-accent small">Skill</label>
+                <input type="text"
+                    name="slot_skill"
+                    class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 mb-3"
+                    placeholder="Enter teaching skill for this slot"
+                    required>
+
+
+
+            <label class="label-accent small">Date</label>
+            <input type="date"
+                   name="slot_date"
+                   class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 mb-3"
+                   required>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="label-accent small">Start Time</label>
+                    <input type="time"
+                           name="slot_start"
+                           class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2"
+                           required>
                 </div>
 
-                <form method="POST" enctype="multipart/form-data" novalidate>
-                    {% csrf_token %}
-
-                   
-                    <div class="mb-4">
-                        <label class="label-accent mb-1 d-block small">Full Name</label>
-                        <input type="text" name="full_name" class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field" placeholder="Enter your full name" required>
-                    </div>
-                    <div class="mb-4">
-                        <label class="label-accent mb-1 d-block small">Short Bio</label>
-                        <textarea name="bio" rows="3" class="form-control bg-dark text-white border-secondary rounded-4 px-4 py-3 input-field" placeholder="Tell students about your teaching style..."></textarea>
-                    </div>
-                    <div class="mb-4">
-                        <label class="label-accent mb-1 d-block small">Technical Skills</label>
-                        <input type="text" name="skills" class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field" placeholder="e.g. Python, React, AWS">
-                    </div>
-                    <div class="mb-4">
-                        <label class="label-accent mb-1 d-block small">What can you teach?</label>
-                        <input type="text" name="tutoring_skills" class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field" placeholder="e.g. Data Structures, Web Design, Calculus">
-                    </div>
-
-                    <div class="mb-5">
-                        <label class="label-accent mb-1 d-block small">Proof of Skills (Portfolio/Sample)</label>
-                        <p class="text-muted" style="font-size: 0.75rem;">Upload a PDF or ZIP containing samples of your work</p>
-                        <input type="file" name="proof_file" class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field">
-                    </div>
-                    <div class="row">
-                        
-                        <div class="col-md-6 mb-4">
-                            <label class="label-accent mb-1 d-block small">LinkedIn Profile URL</label>
-                            <input type="url" name="linkedin" class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field" placeholder="https://linkedin.com/in/...">
-                        </div>
-                        <div class="col-md-6 mb-4">
-                            <label class="label-accent mb-1 d-block small">GitHub Portfolio URL</label>
-                            <input type="url" name="github" class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2 input-field" placeholder="https://github.com/...">
-                        </div>
-                    </div>
-
-                    
-
-                    <button type="submit" class="btn btn-primary-custom w-100 rounded-pill shadow-lg py-3 fw-bold">
-                        Finish Onboarding & Enter Dashboard
-                    </button>
-
-                </form>
-
+                <div class="col-md-6">
+                    <label class="label-accent small">End Time</label>
+                    <input type="time"
+                           name="slot_end"
+                           class="form-control bg-dark text-white border-secondary rounded-pill px-4 py-2"
+                           required>
+                </div>
             </div>
 
         </div>
+
     </div>
+
+    <button type="button"
+            onclick="addSlot()"
+            class="btn btn-outline-info w-100 rounded-pill mt-2">
+        + Add Another Slot
+    </button>
+
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <button type="submit"
+        class="btn btn-primary-custom w-100 rounded-pill shadow-lg py-3 fw-bold">
+    Finish Onboarding & Enter Dashboard
+</button>
+
+</form>
+
+
+<script>
+function addSlot() {
+    const container = document.getElementById("slots-container");
+    const firstSlot = container.firstElementChild;
+    const newSlot = firstSlot.cloneNode(true);
+
+    newSlot.querySelectorAll("input").forEach(input => input.value = "");
+
+    container.appendChild(newSlot);
+}
+</script>
+
 </body>
 </html>
- {% endcomment %}
