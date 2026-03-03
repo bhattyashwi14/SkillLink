@@ -53,6 +53,18 @@ Top-right corner:
 
 ---
 
+## Smart Chatbot Assistant
+
+The Learner Dashboard includes an integrated smart chatbot that dynamically fetches relevant data from the database.
+
+The chatbot assists learners by Providing information about a:
+- Available skills
+- Booked sessions
+- Skills learnt
+- Profile completion status
+
+This adds an intelligent interaction layer, enhancing usability and engagement within the learning ecosystem.
+
 ## Skill Discovery
 
 Below the dashboard metrics:
@@ -243,7 +255,8 @@ This ensures authenticity and quality control within the ecosystem.
 3. Skill discovery & filtering.
 4. Structured booking & session tracking.
 5. Rating-driven credibility system.
-6. Project-based hiring with approval workflow.
+6. Intelligent chatbot assistance integrated with database queries.
+7. Project-based hiring with approval workflow. 
 
 ---
 
@@ -267,3 +280,4 @@ SkillLink bridges academic learning with real-world exposure by:
 - Ensuring verified and moderated participation
 
 It transforms campus skill-sharing into a transparent, accountable, and opportunity-driven ecosystem.
+
